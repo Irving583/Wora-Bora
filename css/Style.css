@@ -1,0 +1,311 @@
+/* ── Variables: los colores del proyecto ── */
+:root {
+  --purple:       #7B2FBE;
+  --purple-dark:  #4A148C;
+  --purple-light: #EDE7F6;
+  --white:        #ffffff;
+  --gray-50:      #f9fafb;
+  --gray-100:     #f3f4f6;
+  --gray-500:     #6b7280;
+  --gray-900:     #111827;
+}
+
+/* ── Reset: quita márgenes y rellenos por defecto ── */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background: var(--gray-50);
+  color: var(--gray-900);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ── Navbar ── */
+.navbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-100);
+  padding: 0 2rem;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.navbar-logo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--purple-dark);
+  letter-spacing: 1px;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.navbar-links a {
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.navbar-links a:hover {
+  color: var(--purple);
+}
+
+/* ── Botones ── */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1.25rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background: var(--purple);
+  color: var(--white);
+}
+
+.btn-primary:hover {
+  background: var(--purple-dark);
+}
+
+.btn-lg {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+}
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(135deg, var(--purple-dark), var(--purple), #a855f7);
+  color: var(--white);
+  text-align: center;
+  padding: 5rem 2rem;
+}
+
+.hero h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.15rem;
+  color: #e9d5ff;
+  margin-bottom: 2rem;
+}
+
+/* ── Footer ── */
+.footer {
+  background: var(--gray-900);
+  color: var(--gray-500);
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.85rem;
+  margin-top: auto;
+}
+
+/* ── Sección genérica ── */
+.section {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
+}
+
+/* ── Grid de tarjetas ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* ── Tarjeta ── */
+.card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  text-align: center;
+}
+
+.card-icon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--gray-500);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* ── Página de formulario (login, register) ── */
+.form-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  padding: 2rem;
+}
+
+.form-box {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 20px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+}
+
+.form-box h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.25rem;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-500);
+}
+
+.form-group input {
+  padding: 0.6rem 0.9rem;
+  border: 1.5px solid var(--gray-100);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--purple);
+}
+
+.form-footer {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--gray-500);
+}
+
+.form-footer a {
+  color: var(--purple);
+  font-weight: 600;
+}
+
+/* ── Alertas de error/éxito ── */
+.alerta {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+  display: none;
+}
+
+.alerta.error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.alerta.visible {
+  display: block;
+}
+
+/* ── Selector de rol (register) ── */
+.label-rol {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-500);
+  margin-bottom: 0.5rem;
+}
+
+.rol-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+
+.rol-option {
+  border: 2px solid var(--gray-100);
+  border-radius: 10px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.rol-option.activo {
+  border-color: var(--purple);
+  background: var(--purple-light);
+}
+
+.rol-option:hover {
+  border-color: var(--purple);
+}
+
+.rol-emoji {
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.rol-label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.rol-desc {
+  font-size: 0.75rem;
+  color: var(--gray-500);
+  margin-top: 0.1rem;
+}
