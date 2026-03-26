@@ -309,3 +309,142 @@ a {
   color: var(--gray-500);
   margin-top: 0.1rem;
 }
+
+/* ── Spinner de carga ── */
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--purple-light);
+  border-top-color: var(--purple);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 4rem auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Dashboard ── */
+.dashboard {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+}
+
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.dashboard-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.dashboard-header p {
+  color: var(--gray-500);
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+}
+
+/* ── Stats ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 14px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.stat-numero {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--purple);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  font-weight: 500;
+  margin-top: 0.2rem;
+}
+
+/* ── Reservas ── */
+.reservas-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.reserva-card {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 14px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.reserva-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.reserva-evento {
+  font-weight: 700;
+}
+
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+}
+
+.badge-pendiente  { background: #fef9c3; color: #854d0e; }
+.badge-aceptada   { background: #dcfce7; color: #166534; }
+.badge-rechazada  { background: #fee2e2; color: #991b1b; }
+.badge-completada { background: #dbeafe; color: #1e40af; }
+
+.reserva-fecha {
+  font-size: 0.88rem;
+  color: var(--gray-500);
+}
+
+.reserva-acciones {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.reserva-acciones .btn {
+  flex: 1;
+  font-size: 0.82rem;
+  padding: 0.4rem 0.75rem;
+}
+
+/* ── Vacío ── */
+.vacio {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--gray-500);
+}
+
+.vacio-emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
