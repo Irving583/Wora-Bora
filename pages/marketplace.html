@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar DJs - Wora Bora</title>
+    <link rel="stylesheet" href="../css/Style.css">
+</head>
+
+<body>
+    <!--NAVBARR-->
+
+    <nav class="navbarr">
+        <a href="../index.html" class="navbar-logo">WORA BORA</a>
+        <div class="navbar-links">
+            <a href="marketplace.html">Buscar DJs</a>
+            <a href="register.html" id="nav-register" class="btn btn-primary">Registrarse</a>
+            <a href="dashboard.html" id="nav-dashboard" style="display:none">Mi panel</a>
+            <button id="nav-logout" style="display:none" class="btn btn-secondary">Salir</button>
+        </div>
+    </nav>
+
+
+
+    <!--Contenido-->
+    <div class="marketplace">
+
+        <h1>Encuentra tu DJ</h1>
+        <p class="subtitulo">Explora nuestra selección de DJs profesionales</p>
+
+        <!-- FILTROS -->
+        <div class="filtros">
+            <div class="filtro-group">
+                <label for="filtro-nombre">Nombre</label>
+                <input type="text" id="filtro-nombre" placeholder="Buscar por nombre..." />
+            </div>
+            <div class="filtro-group">
+                <label for="filtro-genero">Género musical</label>
+                <select id="filtro-genero">
+                    <option value="">Todos</option>
+                    <option value="techno">Techno</option>
+                    <option value="house">House</option>
+                    <option value="reggaeton">Reggaeton</option>
+                    <option value="pop">Pop</option>
+                    <option value="electronica">Electrónica</option>
+                </select>
+            </div>
+            <div class="filtro-group">
+                <label for="filtro-ciudad">Ciudad</label>
+                <input type="text" id="filtro-ciudad" placeholder="Ej: Madrid" />
+            </div>
+            <div class="filtro-group">
+                <label for="filtro-tarifa">Tarifa máxima (€)</label>
+                <input type="number" id="filtro-tarifa" placeholder="Ej: 500" min="0" />
+            </div>
+        </div>
+
+        <!-- INFO RESULTADOS -->
+        <p id="resultados-info" class="resultados-info"></p>
+
+        <!-- LISTA DE DJs -->
+        <div id="lista-djs" class="cards-grid">
+            <div class="spinner"></div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 Wora Bora Agency · Proyecto académico 2º DAW</p>
+    </footer>
+
+    <script type="module" src="../js/marketplace.js"></script>
+
+
+</body>
+
+</html>
