@@ -29,7 +29,7 @@ a {
 }
 
 /* ── Navbar ── */
-.navbar {
+.navbarr {
   background: var(--white);
   border-bottom: 1px solid var(--gray-100);
   padding: 0 2rem;
