@@ -11,7 +11,6 @@ import { doc, getDoc, collection, query, where,
 const contenido = document.getElementById("contenido");
 const btnLogout = document.getElementById("btn-logout");
 
-// Comprobar que el botón existe antes de añadir el evento
 if (btnLogout) {
   btnLogout.addEventListener("click", async () => {
     await signOut(auth);
@@ -19,19 +18,15 @@ if (btnLogout) {
   });
 }
 
-// ── Comprobar si hay sesión activa ─────────────────────────
 onAuthStateChanged(auth, async (usuario) => {
   if (!usuario) {
-    // No hay sesión → ir al login
     window.location.href = "login.html";
     return;
   }
 
-  // Leer los datos del usuario desde Firestore
   const snap = await getDoc(doc(db, "usuarios", usuario.uid));
   const datos = snap.data();
 
-  // Mostrar dashboard según el rol
   if (datos.rol === "dj") {
     await dashboardDJ(usuario.uid, datos);
   } else {
@@ -48,8 +43,21 @@ async function dashboardContratante(uid, datos) {
     where("idUsuario", "==", uid),
     orderBy("creadoEn", "desc")
   );
-  const snap     = await getDocs(q);
-  const reservas = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  const snap = await getDocs(q);
+
+  // Cargar nombre del DJ para cada reserva
+  const reservas = await Promise.all(
+    snap.docs.map(async (d) => {
+      const reserva = { id: d.id, ...d.data() };
+      try {
+        const djSnap = await getDoc(doc(db, "djs", reserva.idDJ));
+        if (djSnap.exists()) {
+          reserva.nombreDJ = djSnap.data().nombre;
+        }
+      } catch (e) {}
+      return reserva;
+    })
+  );
 
   const pendientes  = reservas.filter(r => r.estado === "pendiente").length;
   const aceptadas   = reservas.filter(r => r.estado === "aceptada").length;
@@ -98,7 +106,6 @@ async function dashboardContratante(uid, datos) {
 
     </div>`;
 
-  // Botones de pago simulado
   document.querySelectorAll(".btn-pago").forEach(btn => {
     btn.addEventListener("click", async () => {
       btn.disabled = true;
@@ -126,8 +133,18 @@ function tarjetaContratante(r) {
         <span class="badge badge-${r.estado}">${r.estado}</span>
       </div>
       <p class="reserva-fecha">📅 ${r.fecha}</p>
+      <p style="font-size:0.85rem; color:#7B2FBE; font-weight:600">
+        🎧 DJ: ${r.nombreDJ || "DJ Anónimo"}
+      </p>
+      ${r.mensaje
+        ? `<p style="font-size:0.85rem; color:#6b7280; font-style:italic">
+             "${r.mensaje}"
+           </p>`
+        : ""}
       ${r.pagado
-        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">✔ Pago realizado</p>`
+        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">
+             ✔ Pago realizado
+           </p>`
         : ""}
       ${btnPago}
     </div>`;
@@ -192,7 +209,6 @@ async function dashboardDJ(uid, datos) {
 
     </div>`;
 
-  // Botones aceptar / rechazar
   document.querySelectorAll(".btn-aceptar").forEach(btn => {
     btn.addEventListener("click", () => cambiarEstado(btn, "aceptada", uid, datos));
   });
