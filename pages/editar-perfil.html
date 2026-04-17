@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar perfil - Wora Bora</title>
+    <link rel="stylesheet" href="../css/Style.css">
+</head>
+
+<body>
+    <!--NAVBARR-->
+
+    <nav class="navbarr">
+        <a href="../index.html" class="navbar-logo">WORA BORA</a>
+        <div class="navbar-links">
+            <a href="marketplace.html">Buscar DJs</a>
+            <a href="login.html">Iniciar Sesion</a>
+            <button id="btn-logout" class="btn btn-secondary">Cerar sesión</button>
+        </div>
+    </nav>
+
+    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem">
+        <a href="dashboard.html" style="color:#6b7280; font-size:0.9rem">← Volver</a>
+        <h1 style="margin:0; font-size:1.4rem">Editar perfil DJ</h1>
+    </div>
+
+    <div id="alerta" class="alerta error"></div>
+    <div id="exito" class="alerta exito"></div>
+
+    <div class="form-group">
+        <label for="bio">Biografía</label>
+        <textarea id="bio" rows="4" placeholder="Cuéntanos quién eres, tu experiencia..."></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="ciudad">Ciudad</label>
+        <input type="text" id="ciudad" placeholder="Ej: Madrid" />
+    </div>
+
+    <div class="form-group">
+        <label for="tarifa">Tarifa por evento (€)</label>
+        <input type="number" id="tarifa" min="0" placeholder="Ej: 300" />
+    </div>
+
+    <div class="form-group">
+        <label>Géneros musicales</label>
+        <div id="generos-container" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem">
+        </div>
+    </div>
+
+    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:1.25rem">
+        <input type="checkbox" id="disponible" style="width:16px; height:16px; accent-color:#7B2FBE" />
+        <label for="disponible" style="font-size:0.9rem; font-weight:600; color:#374151; cursor:pointer">
+            Disponible para nuevas reservas
+        </label>
+    </div>
+
+    <button id="btn-guardar" class="btn btn-primary" style="width:100%">
+        Guardar cambios
+    </button>
+
+
+
+    </div>
+
+    </div>
+    <footer class="footer">
+        <p>© 2026 Wora Bora Agency · Proyecto académico 2º DAW</p>
+    </footer>
+
+    <script type="module" src="../js/editar-perfil.js"></script>
+
+</body>
+
+</html>

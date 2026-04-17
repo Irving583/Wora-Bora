@@ -1,13 +1,13 @@
 /* ── Variables: los colores del proyecto ── */
 :root {
-  --purple:       #7B2FBE;
-  --purple-dark:  #4A148C;
+  --purple: #7B2FBE;
+  --purple-dark: #4A148C;
   --purple-light: #EDE7F6;
-  --white:        #ffffff;
-  --gray-50:      #f9fafb;
-  --gray-100:     #f3f4f6;
-  --gray-500:     #6b7280;
-  --gray-900:     #111827;
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-500: #6b7280;
+  --gray-900: #111827;
 }
 
 /* ── Reset: quita márgenes y rellenos por defecto ── */
@@ -39,7 +39,7 @@ a {
   justify-content: space-between;
   position: sticky;
   top: 0;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
 }
 
 .navbar-logo {
@@ -147,7 +147,7 @@ a {
   border: 1px solid var(--gray-100);
   border-radius: 16px;
   padding: 1.75rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   text-align: center;
 }
 
@@ -184,7 +184,7 @@ a {
   padding: 2.5rem;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .form-box h1 {
@@ -322,7 +322,9 @@ a {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 /* ── Dashboard ── */
@@ -415,10 +417,25 @@ a {
   border-radius: 999px;
 }
 
-.badge-pendiente  { background: #fef9c3; color: #854d0e; }
-.badge-aceptada   { background: #dcfce7; color: #166534; }
-.badge-rechazada  { background: #fee2e2; color: #991b1b; }
-.badge-completada { background: #dbeafe; color: #1e40af; }
+.badge-pendiente {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.badge-aceptada {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.badge-rechazada {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-completada {
+  background: #dbeafe;
+  color: #1e40af;
+}
 
 .reserva-fecha {
   font-size: 0.88rem;
@@ -523,13 +540,13 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 0.75rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   transition: box-shadow 0.2s;
   text-align: center;
 }
 
 .dj-card:hover {
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .dj-avatar {
@@ -545,9 +562,20 @@ a {
   color: var(--purple);
 }
 
-.dj-name   { font-size: 1.1rem; font-weight: 700; }
-.dj-city   { font-size: 0.85rem; color: var(--gray-500); }
-.dj-tarifa { font-weight: 700; color: var(--purple); }
+.dj-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.dj-city {
+  font-size: 0.85rem;
+  color: var(--gray-500);
+}
+
+.dj-tarifa {
+  font-weight: 700;
+  color: var(--purple);
+}
 
 .dj-generos {
   display: flex;
@@ -565,4 +593,94 @@ a {
   border-radius: 999px;
 }
 
-.stars { color: #f59e0b; font-size: 0.95rem; }
+.stars {
+  color: #f59e0b;
+  font-size: 0.95rem;
+}
+
+/* ── Alerta éxito ── */
+.alerta.exito {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+}
+
+/* ── Página perfil DJ ── */
+.perfil-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2.5rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 640px) {
+  .perfil-page {
+    grid-template-columns: 1fr;
+  }
+}
+
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.perfil-cabecera {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 16px;
+  padding: 1.75rem;
+  text-align: center;
+}
+
+.perfil-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--purple-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--purple);
+  margin: 0 auto 1rem;
+}
+
+.perfil-nombre {
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.perfil-ciudad {
+  color: var(--gray-500);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.info-bloque {
+  background: var(--white);
+  border: 1px solid var(--gray-100);
+  border-radius: 14px;
+  padding: 1.25rem 1.5rem;
+}
+
+.info-bloque h2 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.info-bloque p {
+  color: var(--gray-700);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.tarifa-grande {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--purple);
+}
