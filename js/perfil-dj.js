@@ -9,7 +9,6 @@ import { doc, getDoc, collection, addDoc, serverTimestamp }
 
 const contenido = document.getElementById("contenido");
 
-// Navbar dinámico
 const navLogin     = document.getElementById("nav-login");
 const navRegister  = document.getElementById("nav-register");
 const navDashboard = document.getElementById("nav-dashboard");
@@ -18,34 +17,30 @@ const navLogout    = document.getElementById("nav-logout");
 let usuarioActual = null;
 let datosUsuario  = null;
 
-// ── Escuchar sesión ────────────────────────────────────────
 onAuthStateChanged(auth, async (user) => {
   usuarioActual = user;
 
   if (user) {
-    navLogin.style.display     = "none";
-    navRegister.style.display  = "none";
-    navDashboard.style.display = "inline-block";
-    navLogout.style.display    = "inline-block";
+    if (navLogin)     navLogin.style.display     = "none";
+    if (navRegister)  navRegister.style.display  = "none";
+    if (navDashboard) navDashboard.style.display = "inline-block";
+    if (navLogout)    navLogout.style.display     = "inline-block";
 
-    // Cargar rol del usuario
     const snap = await getDoc(doc(db, "usuarios", user.uid));
     if (snap.exists()) datosUsuario = snap.data();
   }
 });
 
-// Cerrar sesión
-navLogout.addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.reload();
-});
+if (navLogout) {
+  navLogout.addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.reload();
+  });
+}
 
-// ── Leer el ID del DJ desde la URL ────────────────────────
-// Ejemplo: perfil-dj.html?id=ABC123
 const params = new URLSearchParams(window.location.search);
 const idDJ   = params.get("id");
 
-// ── Cargar perfil del DJ ───────────────────────────────────
 async function cargarPerfil() {
   if (!idDJ) {
     contenido.innerHTML = '<p style="text-align:center;padding:4rem">DJ no encontrado.</p>';
@@ -70,12 +65,22 @@ async function cargarPerfil() {
   }
 }
 
-// ── Construir el HTML del perfil ───────────────────────────
 function renderPerfil(dj) {
-  const inicial = dj.nombre ? dj.nombre[0] : "D";
+  const inicial = dj.nombre ? dj.nombre[0].toUpperCase() : "D";
   const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} €` : "A consultar";
   const ciudad  = dj.ciudad || "Ciudad no indicada";
   const bio     = dj.bio    || "Este DJ aún no ha añadido una descripción.";
+
+  // Colores de avatar según la inicial del nombre
+  const colores = [
+    { bg: "#EDE7F6", color: "#4A148C" },
+    { bg: "#FCE4EC", color: "#880E4F" },
+    { bg: "#E3F2FD", color: "#0D47A1" },
+    { bg: "#E8F5E9", color: "#1B5E20" },
+    { bg: "#FFF3E0", color: "#E65100" },
+    { bg: "#F3E5F5", color: "#6A1B9A" },
+  ];
+  const color = colores[dj.nombre?.charCodeAt(0) % colores.length] || colores[0];
 
   // Estrellas
   let estrellas = "Sin valoraciones aún";
@@ -95,11 +100,13 @@ function renderPerfil(dj) {
   return `
     <div class="perfil-page">
 
-      <!-- Columna izquierda: info del DJ -->
       <div class="perfil-info">
 
         <div class="perfil-cabecera">
-          <div class="perfil-avatar">${inicial}</div>
+          <div class="perfil-avatar"
+            style="background:${color.bg}; color:${color.color}">
+            ${inicial}
+          </div>
           <p class="perfil-nombre">${dj.nombre || "DJ Anónimo"}</p>
           <p class="perfil-ciudad">📍 ${ciudad}</p>
           <p class="stars" style="margin-top:0.5rem">${estrellas}</p>
@@ -122,7 +129,6 @@ function renderPerfil(dj) {
 
       </div>
 
-      <!-- Columna derecha: formulario de reserva -->
       <div>
         <div class="card" style="position:sticky; top:80px">
           <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:0.25rem">
@@ -169,7 +175,6 @@ function renderPerfil(dj) {
     </div>`;
 }
 
-// ── Conectar el formulario de reserva ──────────────────────
 function conectarFormulario(dj) {
   const form        = document.getElementById("form-reserva");
   const btnReserva  = document.getElementById("btn-reserva");
@@ -180,13 +185,11 @@ function conectarFormulario(dj) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Sin sesión → mostrar aviso
     if (!usuarioActual) {
       avisoLogin.style.display = "block";
       return;
     }
 
-    // Los DJs no pueden reservar
     if (datosUsuario?.rol === "dj") {
       alertaError.textContent = "Los DJs no pueden hacer reservas.";
       alertaError.className   = "alerta error visible";
@@ -233,5 +236,4 @@ function conectarFormulario(dj) {
   });
 }
 
-// ── Arrancar ───────────────────────────────────────────────
 cargarPerfil();

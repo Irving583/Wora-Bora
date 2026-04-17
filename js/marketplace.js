@@ -64,6 +64,15 @@ function crearTarjeta(dj) {
   const inicial = dj.nombre ? dj.nombre[0].toUpperCase() : "D";
   const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} €/evento` : "Tarifa a consultar";
   const ciudad  = dj.ciudad ? `<p class="dj-city">📍 ${dj.ciudad}</p>` : "";
+  const colores = [
+  { bg: "#EDE7F6", color: "#4A148C" },
+  { bg: "#FCE4EC", color: "#880E4F" },
+  { bg: "#E3F2FD", color: "#0D47A1" },
+  { bg: "#E8F5E9", color: "#1B5E20" },
+  { bg: "#FFF3E0", color: "#E65100" },
+  { bg: "#F3E5F5", color: "#6A1B9A" },
+];
+const color = colores[dj.nombre?.charCodeAt(0) % colores.length] || colores[0];
 
   // Estrellas
   let estrellas = "";
