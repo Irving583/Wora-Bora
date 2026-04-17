@@ -9,23 +9,32 @@ import { doc, getDoc, setDoc, serverTimestamp }
 
 const GENEROS = ["techno", "house", "reggaeton", "pop", "electronica"];
 
-const bioInput = document.getElementById("bio");
-const ciudadInput = document.getElementById("ciudad");
-const tarifaInput = document.getElementById("tarifa");
-const disponibleCheck = document.getElementById("disponible");
+const bioInput          = document.getElementById("bio");
+const ciudadInput       = document.getElementById("ciudad");
+const tarifaInput       = document.getElementById("tarifa");
+const fotoPerfilInput   = document.getElementById("fotoPerfil");
+const disponibleCheck   = document.getElementById("disponible");
 const generosContenedor = document.getElementById("generos-container");
-const btnGuardar = document.getElementById("btn-guardar");
-const btnLogout = document.getElementById("btn-logout");
-const alerta = document.getElementById("alerta");
-const exito = document.getElementById("exito");
+const btnGuardar        = document.getElementById("btn-guardar");
+const alerta            = document.getElementById("alerta");
+const exito             = document.getElementById("exito");
+const previewPerfil     = document.getElementById("preview-perfil");
+const imgPerfilPreview  = document.getElementById("img-perfil-preview");
 
 let generosSeleccionados = [];
 
-// ── Cerrar sesión ──────────────────────────────────────────
-btnLogout.addEventListener("click", async () => {
-  await signOut(auth);
-  window.location.href = "../index.html";
-});
+// ── Previsualizar foto de perfil al escribir la URL ────────
+if (fotoPerfilInput) {
+  fotoPerfilInput.addEventListener("input", () => {
+    const url = fotoPerfilInput.value.trim();
+    if (url) {
+      imgPerfilPreview.src = url;
+      previewPerfil.style.display = "block";
+    } else {
+      previewPerfil.style.display = "none";
+    }
+  });
+}
 
 // ── Crear botones de género ────────────────────────────────
 function crearBotonesGeneros() {
@@ -42,57 +51,73 @@ function crearBotonesGeneros() {
     btn.addEventListener("click", () => {
       const g = btn.dataset.genero;
       if (generosSeleccionados.includes(g)) {
-        // Deseleccionar
         generosSeleccionados = generosSeleccionados.filter(x => x !== g);
-        btn.style.background = "white";
-        btn.style.color = "#374151";
+        btn.style.background  = "white";
+        btn.style.color       = "#374151";
         btn.style.borderColor = "#d1d5db";
       } else {
-        // Seleccionar
         generosSeleccionados.push(g);
-        btn.style.background = "#7B2FBE";
-        btn.style.color = "white";
+        btn.style.background  = "#7B2FBE";
+        btn.style.color       = "white";
         btn.style.borderColor = "#7B2FBE";
       }
     });
   });
 }
 
-// ── Marcar los géneros que ya tenía guardados ──────────────
+// ── Marcar géneros ya guardados ────────────────────────────
 function marcarGenerosActivos() {
   document.querySelectorAll(".btn-genero").forEach(btn => {
     if (generosSeleccionados.includes(btn.dataset.genero)) {
-      btn.style.background = "#7B2FBE";
-      btn.style.color = "white";
+      btn.style.background  = "#7B2FBE";
+      btn.style.color       = "white";
       btn.style.borderColor = "#7B2FBE";
     }
   });
 }
 
-// ── Esperar sesión y cargar datos del DJ ───────────────────
+// ── Cargar datos y esperar sesión ──────────────────────────
 onAuthStateChanged(auth, async (usuario) => {
   if (!usuario) {
     window.location.href = "login.html";
     return;
   }
 
-  // Comprobar que es DJ
   const usuarioSnap = await getDoc(doc(db, "usuarios", usuario.uid));
   if (!usuarioSnap.exists() || usuarioSnap.data().rol !== "dj") {
     window.location.href = "dashboard.html";
     return;
   }
 
-  // Cargar datos actuales del DJ
   const djSnap = await getDoc(doc(db, "djs", usuario.uid));
-  console.log("UID del usuario:", usuario.uid);
   if (djSnap.exists()) {
     const dj = djSnap.data();
-    bioInput.value = dj.bio || "";
-    ciudadInput.value = dj.ciudad || "";
-    tarifaInput.value = dj.tarifa || "";
+
+    // Datos básicos
+    bioInput.value          = dj.bio       || "";
+    ciudadInput.value       = dj.ciudad    || "";
+    tarifaInput.value       = dj.tarifa    || "";
     disponibleCheck.checked = dj.disponible ?? true;
-    generosSeleccionados = dj.generos || [];
+    generosSeleccionados    = dj.generos   || [];
+
+    // Foto de perfil
+    if (dj.fotoPerfil && fotoPerfilInput) {
+      fotoPerfilInput.value       = dj.fotoPerfil;
+      imgPerfilPreview.src        = dj.fotoPerfil;
+      previewPerfil.style.display = "block";
+    }
+
+    // Sitios donde ha pinchado
+    const sitios = dj.sitios || [];
+    document.querySelectorAll(".input-sitio").forEach((input, i) => {
+      input.value = sitios[i] || "";
+    });
+
+    // Galería de fotos
+    const galeria = dj.galeria || [];
+    document.querySelectorAll(".input-galeria").forEach((input, i) => {
+      input.value = galeria[i] || "";
+    });
   }
 
   crearBotonesGeneros();
@@ -101,32 +126,44 @@ onAuthStateChanged(auth, async (usuario) => {
   // ── Guardar cambios ──────────────────────────────────────
   btnGuardar.addEventListener("click", async () => {
     alerta.className = "alerta error";
-    exito.className = "alerta exito";
-
-    btnGuardar.disabled = true;
+    exito.className  = "alerta exito";
+    btnGuardar.disabled    = true;
     btnGuardar.textContent = "Guardando...";
+
+    // Recoger sitios
+    const sitios = Array.from(document.querySelectorAll(".input-sitio"))
+      .map(input => input.value.trim())
+      .filter(v => v !== "");
+
+    // Recoger galería
+    const galeria = Array.from(document.querySelectorAll(".input-galeria"))
+      .map(input => input.value.trim())
+      .filter(v => v !== "");
 
     try {
       await setDoc(doc(db, "djs", usuario.uid), {
-        bio: bioInput.value.trim(),
-        ciudad: ciudadInput.value.trim(),
-        tarifa: parseFloat(tarifaInput.value) || 0,
-        generos: generosSeleccionados,
-        disponible: disponibleCheck.checked,
+        bio:           bioInput.value.trim(),
+        ciudad:        ciudadInput.value.trim(),
+        tarifa:        parseFloat(tarifaInput.value) || 0,
+        generos:       generosSeleccionados,
+        disponible:    disponibleCheck.checked,
+        fotoPerfil:    fotoPerfilInput?.value.trim() || "",
+        sitios,
+        galeria,
         actualizadoEn: serverTimestamp()
       }, { merge: true });
 
       exito.textContent = "✅ Perfil actualizado correctamente";
-      exito.className = "alerta exito visible";
+      exito.className   = "alerta exito visible";
       setTimeout(() => { exito.className = "alerta exito"; }, 3000);
 
     } catch (error) {
       alerta.textContent = "Error al guardar. Inténtalo de nuevo.";
-      alerta.className = "alerta error visible";
+      alerta.className   = "alerta error visible";
       console.error(error);
     }
 
-    btnGuardar.disabled = false;
+    btnGuardar.disabled    = false;
     btnGuardar.textContent = "Guardar cambios";
   });
 });

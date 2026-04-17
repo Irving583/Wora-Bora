@@ -10,61 +10,123 @@
 
 <body>
     <!--NAVBARR-->
-
     <nav class="navbarr">
         <a href="../index.html" class="navbar-logo">WORA BORA</a>
         <div class="navbar-links">
             <a href="marketplace.html">Buscar DJs</a>
-            <a href="login.html">Iniciar Sesion</a>
-            <button id="btn-logout" class="btn btn-secondary">Cerar sesión</button>
+            <a href="login.html" id="nav-login">Iniciar Sesión</a>
+            <a href="register.html" id="nav-register" class="btn btn-primary">Registrarse</a>
+            <a href="dashboard.html" id="nav-dashboard" style="display:none">Mi panel</a>
+            <button id="nav-logout" style="display:none" class="btn btn-secondary">Salir</button>
         </div>
     </nav>
 
-    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem">
-        <a href="dashboard.html" style="color:#6b7280; font-size:0.9rem">← Volver</a>
-        <h1 style="margin:0; font-size:1.4rem">Editar perfil DJ</h1>
-    </div>
+    <div class="form-page" style="align-items:flex-start; padding-top:2.5rem">
+        <div class="form-box" style="max-width:560px">
 
-    <div id="alerta" class="alerta error"></div>
-    <div id="exito" class="alerta exito"></div>
+            <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem">
+                <a href="dashboard.html" style="color:#6b7280; font-size:0.9rem">← Volver</a>
+                <h1 style="margin:0; font-size:1.4rem">Editar perfil DJ</h1>
+            </div>
 
-    <div class="form-group">
-        <label for="bio">Biografía</label>
-        <textarea id="bio" rows="4" placeholder="Cuéntanos quién eres, tu experiencia..."></textarea>
-    </div>
+            <div id="alerta" class="alerta error"></div>
+            <div id="exito" class="alerta exito"></div>
 
-    <div class="form-group">
-        <label for="ciudad">Ciudad</label>
-        <input type="text" id="ciudad" placeholder="Ej: Madrid" />
-    </div>
+            <!-- Foto de perfil -->
+            <div class="form-group">
+                <label for="fotoPerfil">Foto de perfil (URL de imagen)</label>
+                <input type="url" id="fotoPerfil"
+                    placeholder="https://i.imgur.com/tu-foto.jpg" />
+                <p style="font-size:0.78rem; color:#6b7280; margin-top:0.25rem">
+                    Sube tu foto a <a href="https://imgur.com" target="_blank"
+                    style="color:#7B2FBE">imgur.com</a> gratis y pega la URL aquí
+                </p>
+            </div>
 
-    <div class="form-group">
-        <label for="tarifa">Tarifa por evento (€)</label>
-        <input type="number" id="tarifa" min="0" placeholder="Ej: 300" />
-    </div>
+            <!-- Previsualización foto de perfil -->
+            <div id="preview-perfil" style="text-align:center; margin-bottom:1rem; display:none">
+                <img id="img-perfil-preview"
+                    style="width:80px; height:80px; border-radius:50%;
+                           object-fit:cover; border:3px solid #7B2FBE" />
+            </div>
 
-    <div class="form-group">
-        <label>Géneros musicales</label>
-        <div id="generos-container" style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem">
+            <!-- Biografía -->
+            <div class="form-group">
+                <label for="bio">Biografía</label>
+                <textarea id="bio" rows="4"
+                    placeholder="Cuéntanos quién eres, tu experiencia..."></textarea>
+            </div>
+
+            <!-- Ciudad -->
+            <div class="form-group">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" placeholder="Ej: Madrid" />
+            </div>
+
+            <!-- Tarifa -->
+            <div class="form-group">
+                <label for="tarifa">Tarifa por evento (€)</label>
+                <input type="number" id="tarifa" min="0" placeholder="Ej: 300" />
+            </div>
+
+            <!-- Géneros -->
+            <div class="form-group">
+                <label>Géneros musicales</label>
+                <div id="generos-container"
+                    style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem">
+                </div>
+            </div>
+
+            <!-- Sitios donde ha pinchado -->
+            <div class="form-group">
+                <label>Sitios donde he pinchado</label>
+                <p style="font-size:0.78rem; color:#6b7280; margin-bottom:0.5rem">
+                    Añade hasta 5 sitios (club, festival, sala...)
+                </p>
+                <div style="display:flex; flex-direction:column; gap:0.5rem">
+                    <input type="text" class="input-sitio" placeholder="Ej: Club Fabrik, Madrid" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Festival Dreambeach" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Sala Changó, Barcelona" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Café del Mar, Ibiza" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Arena Club, Berlín" />
+                </div>
+            </div>
+
+            <!-- Galería de fotos -->
+            <div class="form-group">
+                <label>Galería de fotos (URLs)</label>
+                <p style="font-size:0.78rem; color:#6b7280; margin-bottom:0.5rem">
+                    Añade hasta 4 fotos subidas a imgur.com
+                </p>
+                <div style="display:flex; flex-direction:column; gap:0.5rem">
+                    <input type="url" class="input-galeria"
+                        placeholder="https://i.imgur.com/foto1.jpg" />
+                    <input type="url" class="input-galeria"
+                        placeholder="https://i.imgur.com/foto2.jpg" />
+                    <input type="url" class="input-galeria"
+                        placeholder="https://i.imgur.com/foto3.jpg" />
+                    <input type="url" class="input-galeria"
+                        placeholder="https://i.imgur.com/foto4.jpg" />
+                </div>
+            </div>
+
+            <!-- Disponible -->
+            <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:1.25rem">
+                <input type="checkbox" id="disponible"
+                    style="width:16px; height:16px; accent-color:#7B2FBE" />
+                <label for="disponible"
+                    style="font-size:0.9rem; font-weight:600; color:#374151; cursor:pointer">
+                    Disponible para nuevas reservas
+                </label>
+            </div>
+
+            <button id="btn-guardar" class="btn btn-primary" style="width:100%">
+                Guardar cambios
+            </button>
+
         </div>
     </div>
 
-    <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:1.25rem">
-        <input type="checkbox" id="disponible" style="width:16px; height:16px; accent-color:#7B2FBE" />
-        <label for="disponible" style="font-size:0.9rem; font-weight:600; color:#374151; cursor:pointer">
-            Disponible para nuevas reservas
-        </label>
-    </div>
-
-    <button id="btn-guardar" class="btn btn-primary" style="width:100%">
-        Guardar cambios
-    </button>
-
-
-
-    </div>
-
-    </div>
     <footer class="footer">
         <p>© 2026 Wora Bora Agency · Proyecto académico 2º DAW</p>
     </footer>
@@ -73,5 +135,4 @@
     <script type="module" src="../js/navbar.js"></script>
 
 </body>
-
 </html>
