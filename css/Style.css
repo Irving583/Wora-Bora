@@ -928,6 +928,7 @@ a {
   margin: 0 auto;
 }
 
+
 .genero-card {
   display: flex;
   flex-direction: column;
@@ -976,4 +977,56 @@ a {
 }
 
 /* ── Footer mejorado ── */
-.
+.footer-contenido {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footer-logo {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: 1px;
+}
+
+.footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer-links a {
+  color: #9ca3af;
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .section-dark-contenido {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .section-dark-imagen {
+    display: none;
+  }
+  .hero-stats {
+    gap: 1rem;
+  }
+  .hero-stat-divider {
+    display: none;
+  }
+  .footer-contenido {
+    flex-direction: column;
+    text-align: center;
+  }
+}
