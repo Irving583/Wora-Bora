@@ -87,7 +87,7 @@ function crearTarjeta(dj) {
       ${estrellas}
       ${tags}
       <p class="dj-tarifa">${tarifa}</p>
-      <a href="perfil-dj.html?id=${dj.id}" class="btn btn-primary" style="width:100%">
+      <a href="perfil.html?id=${dj.id}" class="btn btn-primary" style="width:100%">
         Ver perfil
       </a>
     </div>`;

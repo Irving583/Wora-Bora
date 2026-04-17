@@ -4,20 +4,20 @@
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, getDoc, updateDoc, serverTimestamp }
+import { doc, getDoc, setDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const GENEROS = ["techno", "house", "reggaeton", "pop", "electronica"];
 
-const bioInput          = document.getElementById("bio");
-const ciudadInput       = document.getElementById("ciudad");
-const tarifaInput       = document.getElementById("tarifa");
-const disponibleCheck   = document.getElementById("disponible");
+const bioInput = document.getElementById("bio");
+const ciudadInput = document.getElementById("ciudad");
+const tarifaInput = document.getElementById("tarifa");
+const disponibleCheck = document.getElementById("disponible");
 const generosContenedor = document.getElementById("generos-container");
-const btnGuardar        = document.getElementById("btn-guardar");
-const btnLogout         = document.getElementById("btn-logout");
-const alerta            = document.getElementById("alerta");
-const exito             = document.getElementById("exito");
+const btnGuardar = document.getElementById("btn-guardar");
+const btnLogout = document.getElementById("btn-logout");
+const alerta = document.getElementById("alerta");
+const exito = document.getElementById("exito");
 
 let generosSeleccionados = [];
 
@@ -44,14 +44,14 @@ function crearBotonesGeneros() {
       if (generosSeleccionados.includes(g)) {
         // Deseleccionar
         generosSeleccionados = generosSeleccionados.filter(x => x !== g);
-        btn.style.background  = "white";
-        btn.style.color       = "#374151";
+        btn.style.background = "white";
+        btn.style.color = "#374151";
         btn.style.borderColor = "#d1d5db";
       } else {
         // Seleccionar
         generosSeleccionados.push(g);
-        btn.style.background  = "#7B2FBE";
-        btn.style.color       = "white";
+        btn.style.background = "#7B2FBE";
+        btn.style.color = "white";
         btn.style.borderColor = "#7B2FBE";
       }
     });
@@ -62,8 +62,8 @@ function crearBotonesGeneros() {
 function marcarGenerosActivos() {
   document.querySelectorAll(".btn-genero").forEach(btn => {
     if (generosSeleccionados.includes(btn.dataset.genero)) {
-      btn.style.background  = "#7B2FBE";
-      btn.style.color       = "white";
+      btn.style.background = "#7B2FBE";
+      btn.style.color = "white";
       btn.style.borderColor = "#7B2FBE";
     }
   });
@@ -85,13 +85,14 @@ onAuthStateChanged(auth, async (usuario) => {
 
   // Cargar datos actuales del DJ
   const djSnap = await getDoc(doc(db, "djs", usuario.uid));
+  console.log("UID del usuario:", usuario.uid);
   if (djSnap.exists()) {
     const dj = djSnap.data();
-    bioInput.value          = dj.bio      || "";
-    ciudadInput.value       = dj.ciudad   || "";
-    tarifaInput.value       = dj.tarifa   || "";
+    bioInput.value = dj.bio || "";
+    ciudadInput.value = dj.ciudad || "";
+    tarifaInput.value = dj.tarifa || "";
     disponibleCheck.checked = dj.disponible ?? true;
-    generosSeleccionados    = dj.generos  || [];
+    generosSeleccionados = dj.generos || [];
   }
 
   crearBotonesGeneros();
@@ -100,32 +101,32 @@ onAuthStateChanged(auth, async (usuario) => {
   // ── Guardar cambios ──────────────────────────────────────
   btnGuardar.addEventListener("click", async () => {
     alerta.className = "alerta error";
-    exito.className  = "alerta exito";
+    exito.className = "alerta exito";
 
-    btnGuardar.disabled    = true;
+    btnGuardar.disabled = true;
     btnGuardar.textContent = "Guardando...";
 
     try {
-      await updateDoc(doc(db, "djs", usuario.uid), {
-        bio:          bioInput.value.trim(),
-        ciudad:       ciudadInput.value.trim(),
-        tarifa:       parseFloat(tarifaInput.value) || 0,
-        generos:      generosSeleccionados,
-        disponible:   disponibleCheck.checked,
+      await setDoc(doc(db, "djs", usuario.uid), {
+        bio: bioInput.value.trim(),
+        ciudad: ciudadInput.value.trim(),
+        tarifa: parseFloat(tarifaInput.value) || 0,
+        generos: generosSeleccionados,
+        disponible: disponibleCheck.checked,
         actualizadoEn: serverTimestamp()
-      });
+      }, { merge: true });
 
       exito.textContent = "✅ Perfil actualizado correctamente";
-      exito.className   = "alerta exito visible";
+      exito.className = "alerta exito visible";
       setTimeout(() => { exito.className = "alerta exito"; }, 3000);
 
     } catch (error) {
       alerta.textContent = "Error al guardar. Inténtalo de nuevo.";
-      alerta.className   = "alerta error visible";
+      alerta.className = "alerta error visible";
       console.error(error);
     }
 
-    btnGuardar.disabled    = false;
+    btnGuardar.disabled = false;
     btnGuardar.textContent = "Guardar cambios";
   });
 });
