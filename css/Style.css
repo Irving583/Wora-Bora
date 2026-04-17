@@ -122,9 +122,9 @@ a {
 
 /* ── Sección genérica ── */
 .section {
-  max-width: 1000px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 4rem 2rem;
+  padding: 4rem 3rem;
 }
 
 .section-title {
@@ -781,3 +781,199 @@ a {
 .stat-card:nth-child(2) { animation-delay: 0.10s; }
 .stat-card:nth-child(3) { animation-delay: 0.15s; }
 .stat-card:nth-child(4) { animation-delay: 0.20s; }
+
+/* ── Hero mejorado ── */
+.hero-contenido {
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.hero-highlight {
+  background: linear-gradient(90deg, #e9d5ff, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 3rem;
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 1.25rem 2rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  flex-wrap: wrap;
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.hero-stat-numero {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+}
+
+.hero-stat-label {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.7);
+}
+
+.hero-stat-divider {
+  width: 1px;
+  height: 40px;
+  background: rgba(255,255,255,0.2);
+}
+
+/* ── Botón blanco ── */
+.btn-white {
+  background: white;
+  color: var(--purple);
+  border-color: white;
+  font-weight: 700;
+}
+
+.btn-white:hover {
+  background: var(--purple-light);
+  border-color: var(--purple-light);
+}
+
+/* ── Section subtitle ── */
+.section-subtitle {
+  text-align: center;
+  color: var(--gray-500);
+  margin-bottom: 2rem;
+  margin-top: -1.5rem;
+  font-size: 1rem;
+}
+
+/* ── Card número ── */
+.card-numero {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--purple-light);
+  margin-bottom: 0.5rem;
+}
+
+.card-hover {
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(123,47,190,0.15);
+}
+
+/* ── Sección oscura para DJs ── */
+.section-dark {
+  background: linear-gradient(135deg, #1a1a2e, #4A148C);
+  padding: 5rem 2rem;
+}
+
+.section-dark-contenido {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+
+.lista-ventajas {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.lista-ventajas li {
+  color: rgba(255,255,255,0.9);
+  font-size: 0.95rem;
+}
+
+.section-dark-imagen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Géneros grid ── */
+.generos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.genero-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  background: white;
+  border: 2px solid var(--gray-100);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  font-weight: 700;
+  color: var(--gray-900);
+  text-decoration: none;
+  transition: all 0.2s;
+  min-width: 120px;
+}
+
+.genero-card:hover {
+  border-color: var(--purple);
+  background: var(--purple-light);
+  color: var(--purple);
+  transform: translateY(-3px);
+}
+
+.genero-emoji {
+  font-size: 2rem;
+}
+
+/* ── CTA Final ── */
+.cta-final {
+  background: linear-gradient(135deg, #7B2FBE, #a855f7);
+  text-align: center;
+  padding: 5rem 2rem;
+  color: white;
+}
+
+.cta-final h2 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.75rem;
+}
+
+.cta-final p {
+  color: rgba(255,255,255,0.8);
+  font-size: 1.05rem;
+  margin-bottom: 2rem;
+}
+
+/* ── Footer mejorado ── */
+.

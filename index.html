@@ -1,76 +1,165 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wora Bora Agency
-    </title>
+    <title>Wora Bora Agency</title>
     <link rel="stylesheet" href="css/Style.css">
 </head>
-
 <body>
 
     <!--NAVBARRA-->
     <nav class="navbarr">
-        <a href="index.html" class="navbar-logo">Wora Bora</a>
+        <a href="index.html" class="navbar-logo">WORA BORA</a>
         <div class="navbar-links">
             <a href="pages/marketplace.html">Buscar DJs</a>
-            <a href="pages/login.html">Iniciar Sesion</a>
-            <a href="pages/register.html" class="btn btn-primary">Registrarse </a>
-
+            <a href="pages/login.html" id="nav-login">Iniciar sesión</a>
+            <a href="pages/register.html" id="nav-register" class="btn btn-primary">Registrarse</a>
+            <a href="pages/dashboard.html" id="nav-dashboard" style="display:none">Mi panel</a>
+            <button id="nav-logout" style="display:none" class="btn btn-secondary">Salir</button>
         </div>
     </nav>
 
-    <!--La seccion de bienvenida-->
+    <!-- HERO PRINCIPAL -->
     <section class="hero">
-        <h1>Conecta con el DJ perfecto.
-        </h1>
-        <p>Busca, reserva y disfruta.</p>
-        <a href="pages/marketplace.html" class="btn btn-primary btn-lg">Buscar DJs</a>
-
+        <div class="hero-contenido">
+            <span class="hero-badge">🎧 La plataforma de DJs #1</span>
+            <h1>Conecta con el<br><span class="hero-highlight">DJ perfecto</span><br>para tu evento</h1>
+            <p>Encuentra, contacta y reserva DJs profesionales para cualquier tipo de evento. Bodas, fiestas, festivales y mucho más.</p>
+            <div class="hero-buttons">
+                <a href="pages/marketplace.html" class="btn btn-white btn-lg">🔍 Buscar DJs</a>
+                <a href="pages/register.html" class="btn btn-outline btn-lg">Soy DJ – Unirme</a>
+            </div>
+            <!-- Stats rápidas -->
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="hero-stat-numero">+50</span>
+                    <span class="hero-stat-label">DJs registrados</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-numero">+200</span>
+                    <span class="hero-stat-label">Eventos realizados</span>
+                </div>
+                <div class="hero-stat-divider"></div>
+                <div class="hero-stat">
+                    <span class="hero-stat-numero">4.9⭐</span>
+                    <span class="hero-stat-label">Valoración media</span>
+                </div>
+            </div>
+        </div>
     </section>
 
+    <!-- CÓMO FUNCIONA -->
     <section class="section">
         <h2 class="section-title">¿Cómo funciona?</h2>
+        <p class="section-subtitle">En tres simples pasos tienes tu DJ reservado</p>
         <div class="cards-grid">
-
-            <div class="card">
+            <div class="card card-hover">
+                <div class="card-numero">01</div>
                 <div class="card-icon">🔍</div>
-                <h3> Busca</h3>
-                <p>Filtra DJs por género musical, ciudad y tarifa.</p>
-
+                <h3>Busca</h3>
+                <p>Filtra DJs por género musical, ciudad y tarifa. Revisa su perfil, galería y sitios donde han pinchado.</p>
             </div>
-
-
-            <div class="card">
+            <div class="card card-hover">
+                <div class="card-numero">02</div>
                 <div class="card-icon">📅</div>
                 <h3>Reserva</h3>
-                <p>Envía tu solicitud directamente al DJ con los detalles del evento.</p>
+                <p>Envía tu solicitud directamente al DJ con todos los detalles del evento. El DJ la acepta o rechaza.</p>
             </div>
-
-
-            <div class="card">
+            <div class="card card-hover">
+                <div class="card-numero">03</div>
                 <div class="card-icon">⭐</div>
                 <h3>Valora</h3>
-                <p>Una vez finalizado el evento, deja una reseña.</p>
-
+                <p>Una vez finalizado el evento, comparte tu experiencia y ayuda a otros a elegir el mejor DJ.</p>
             </div>
-
-
         </div>
-
-
-
-
-        </div>
-
     </section>
-    <!--Footer: Pie de página-->
-    <footer class="footer">
-        <p>© 2026 Wora Bora Agency</p>
-    </footer>
-<script type="module" src="js/navbar.js"></script>
-</body>
 
+    <!-- PARA DJs -->
+    <section class="section-dark">
+        <div class="section-dark-contenido">
+            <div>
+                <h2 style="font-size:2rem; font-weight:800; color:white; margin-bottom:1rem">
+                    ¿Eres DJ? 🎧
+                </h2>
+                <p style="color:rgba(255,255,255,0.8); font-size:1.05rem; line-height:1.7; margin-bottom:1.5rem">
+                    Crea tu perfil profesional, muestra tu trabajo y recibe solicitudes de contratación directamente. Sin intermediarios, sin complicaciones.
+                </p>
+                <ul class="lista-ventajas">
+                    <li>✅ Perfil profesional con galería de fotos</li>
+                    <li>✅ Gestiona tus reservas desde el panel</li>
+                    <li>✅ Recibe valoraciones de tus clientes</li>
+                    <li>✅ 100% gratuito para empezar</li>
+                </ul>
+                <a href="pages/register.html" class="btn btn-white btn-lg" style="margin-top:1.5rem; display:inline-block">
+                    Crear mi perfil DJ
+                </a>
+            </div>
+            <div class="section-dark-imagen">
+                <div style="font-size:8rem; text-align:center">🎛️</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- GÉNEROS MUSICALES -->
+    <section class="section">
+        <h2 class="section-title">Todos los estilos musicales</h2>
+        <p class="section-subtitle">Encuentra el DJ perfecto para tu estilo</p>
+        <div class="generos-grid">
+            <a href="pages/marketplace.html" class="genero-card">
+                <span class="genero-emoji">🔊</span>
+                <span>Techno</span>
+            </a>
+            <a href="pages/marketplace.html" class="genero-card">
+                <span class="genero-emoji">🏠</span>
+                <span>House</span>
+            </a>
+            <a href="pages/marketplace.html" class="genero-card">
+                <span class="genero-emoji">🎵</span>
+                <span>Reggaeton</span>
+            </a>
+            <a href="pages/marketplace.html" class="genero-card">
+                <span class="genero-emoji">🎤</span>
+                <span>Pop</span>
+            </a>
+            <a href="pages/marketplace.html" class="genero-card">
+                <span class="genero-emoji">⚡</span>
+                <span>Electrónica</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- CTA FINAL -->
+    <section class="cta-final">
+        <h2>¿Listo para encontrar tu DJ?</h2>
+        <p>Más de 50 DJs profesionales esperando tu solicitud</p>
+        <a href="pages/marketplace.html" class="btn btn-white btn-lg">
+            Ver todos los DJs →
+        </a>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-contenido">
+            <div>
+                <p class="footer-logo">WORA BORA</p>
+                <p style="color:#9ca3af; font-size:0.85rem; margin-top:0.5rem">
+                    La plataforma de contratación de DJs
+                </p>
+            </div>
+            <div class="footer-links">
+                <a href="pages/marketplace.html">Buscar DJs</a>
+                <a href="pages/register.html">Registrarse</a>
+                <a href="pages/login.html">Iniciar sesión</a>
+            </div>
+        </div>
+        <p style="text-align:center; color:#6b7280; font-size:0.8rem; margin-top:2rem; border-top:1px solid #374151; padding-top:1rem">
+            © 2026 Wora Bora Agency · Proyecto académico 2º DAW · Irving Christopher Huamanchumo Galán
+        </p>
+    </footer>
+
+    <script type="module" src="js/navbar.js"></script>
+
+</body>
 </html>

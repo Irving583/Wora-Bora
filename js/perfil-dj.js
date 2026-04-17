@@ -139,9 +139,9 @@ function renderPerfil(dj) {
   return `
     <!-- CABECERA HERO -->
     <div style="background:linear-gradient(135deg, #4A148C, #7B2FBE, #a855f7);
-                padding:3rem 2rem 4rem; position:relative">
-      <div style="max-width:900px; margin:0 auto;
-                  display:flex; align-items:flex-end; gap:2rem; flex-wrap:wrap">
+            padding:3rem 4rem 4rem; position:relative; width:100%">
+      <div style="max-width:1200px; margin:0 auto;
+            display:flex; align-items:flex-end; gap:2rem; flex-wrap:wrap">
 
         <!-- Foto -->
         ${fotoHTML}
@@ -171,8 +171,8 @@ function renderPerfil(dj) {
     </div>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <div style="max-width:900px; margin:0 auto; padding:2rem;
-                display:grid; grid-template-columns:1fr 380px; gap:2rem">
+    <div style="max-width:1200px; margin:0 auto; padding:2rem;
+            display:grid; grid-template-columns:1fr 380px; gap:2rem">
 
       <!-- COLUMNA IZQUIERDA -->
       <div style="display:flex; flex-direction:column; gap:1.5rem">
