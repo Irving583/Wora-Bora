@@ -11,29 +11,28 @@
 <body>
     <!--NAVBARRA-->
     <nav class="navbarr">
-        <a href="../index.html" class="navbar-logo">Wora Bora</a>
+        <a href="../index.html" class="navbar-logo">WORA BORA</a>
         <div class="navbar-links">
             <a href="marketplace.html">Buscar DJs</a>
-            <a href="login.html">Iniciar Sesion</a>
-            <a href="register.html" class="btn btn-primary">Registrarse </a>
-
+            <a href="login.html" id="nav-login">Iniciar sesión</a>
+            <a href="register.html" id="nav-register" class="btn btn-primary">Registrarse</a>
+            <a href="dashboard.html" id="nav-dashboard" style="display:none">Mi panel</a>
+            <button id="nav-logout" style="display:none" class="btn btn-secondary">Salir</button>
         </div>
     </nav>
 
-
     <!--Formulario-->
-
     <div class="form-page">
         <div class="form-box">
 
             <h1>Crear Cuenta</h1>
-            <p class="subtitle">únete a Wora Bora Agency</p>
+            <p class="subtitle">Únete a Wora Bora Agency</p>
 
             <div id="alerta" class="alerta error"></div>
 
             <div class="form-group">
-                <label for="nombre"> Nombre completo </label>
-                <input type="text" id="nombre" placeholder="Tu nombre">
+                <label for="nombre">Nombre completo</label>
+                <input type="text" id="nombre" placeholder="Tu nombre" />
             </div>
 
             <div class="form-group">
@@ -46,43 +45,21 @@
                 <input type="password" id="password" placeholder="Mínimo 6 caracteres" />
             </div>
 
-    <!-- Rol de la persona que se registra-->
+            <!-- Rol siempre contratante — oculto -->
+            <input type="hidden" id="rol" value="contratante" />
 
-
-            <label class="label-rol">Quiero regiustrarme como</label>
-            <div class="rol-selector">
-
-                <div class="rol-option activo" data-rol="contratante">
-                    <span class="rol-emoji">📝</span>
-                    <div class="rol-label">Contratante</div>
-                    <div class="rol-desc">Busco DJs para mis eventos</div>
-                </div>
-
-
-                <div class="rol-option" data-rol="DJ">
-                    <span class="rol-emoji">🎧</span>
-                    <div class="rol-label">DJ</div>
-                    <div class="rol-desc">Ofrezco mis servicios</div>
-                </div>
-
-
-
-            </div>
-
-
-            <!--Campo Oculto para poder guardar-->
-
-            <input type="hidden" id="rol" value="contratante">
-
-            <button id="btn-register" class="btn btn-primary" style="width: 100%; margin-top:0.5rem ;"> Crear Cuenta</button>
+            <button id="btn-register" class="btn btn-primary"
+                style="width:100%; margin-top:0.5rem">
+                Crear Cuenta
+            </button>
 
             <p class="form-footer">
-                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>   
-            </p>   
-            
-            
-            </div>
+                ¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a>
+            </p>
+
+        </div>
     </div>
+
     <script type="module" src="../js/register.js"></script>
     <script type="module" src="../js/navbar.js"></script>
 </body>
