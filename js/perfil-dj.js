@@ -53,6 +53,7 @@ async function cargarPerfil() {
     const dj = { id: djSnap.id, ...djSnap.data() };
     contenido.innerHTML = renderPerfil(dj);
     conectarFormulario(dj);
+    conectarGaleria(dj);
   } catch (error) {
     contenido.innerHTML = '<p style="text-align:center;padding:4rem;color:red">Error al cargar.</p>';
     console.error(error);
@@ -66,7 +67,6 @@ function renderPerfil(dj) {
   const ciudad  = dj.ciudad || "Ciudad no indicada";
   const bio     = dj.bio    || "Este DJ aún no ha añadido una descripción.";
 
-  // Colores avatar
   const colores = [
     { bg: "#EDE7F6", color: "#4A148C" },
     { bg: "#FCE4EC", color: "#880E4F" },
@@ -77,7 +77,6 @@ function renderPerfil(dj) {
   ];
   const color = colores[nombre.charCodeAt(0) % colores.length];
 
-  // Estrellas
   let estrellasHTML = "";
   if (dj.valoracion > 0) {
     const llenas = Math.round(dj.valoracion);
@@ -92,7 +91,6 @@ function renderPerfil(dj) {
       </div>`;
   }
 
-  // Tags géneros
   const tags = dj.generos?.length > 0
     ? dj.generos.map(g => `
         <span style="background:rgba(255,255,255,0.15); color:white;
@@ -103,7 +101,6 @@ function renderPerfil(dj) {
         </span>`).join("")
     : "";
 
-  // Sitios estilo carrera
   const sitiosHTML = dj.sitios?.length > 0
     ? dj.sitios.map((s, i) => `
         <div style="display:flex; align-items:center; justify-content:space-between;
@@ -119,21 +116,28 @@ function renderPerfil(dj) {
         </div>`).join("")
     : '<p style="color:#6b7280; padding:1rem 0">Aún no hay sitios añadidos</p>';
 
-  // Galería
   const galeriaHTML = dj.galeria?.length > 0
     ? `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
                    gap:1rem">
-        ${dj.galeria.map(url => `
-          <div style="overflow:hidden; border-radius:12px; aspect-ratio:1">
+        ${dj.galeria.map((url, i) => `
+          <div class="foto-galeria" data-index="${i}"
+               style="overflow:hidden; border-radius:12px; aspect-ratio:1;
+                      cursor:pointer; position:relative">
             <img src="${url}" alt="foto DJ"
               style="width:100%; height:100%; object-fit:cover; transition:transform 0.3s"
               onmouseover="this.style.transform='scale(1.05)'"
               onmouseout="this.style.transform='scale(1)'" />
+            <div style="position:absolute; inset:0; background:rgba(0,0,0,0);
+                        display:flex; align-items:center; justify-content:center;
+                        transition:background 0.2s; font-size:2rem; color:white; opacity:0"
+                 onmouseover="this.style.background='rgba(0,0,0,0.3)'; this.style.opacity='1'"
+                 onmouseout="this.style.background='rgba(0,0,0,0)'; this.style.opacity='0'">
+              🔍
+            </div>
           </div>`).join("")}
        </div>`
     : '<p style="color:#6b7280">Aún no hay fotos en la galería</p>';
 
-  // Foto o avatar
   const fotoHTML = dj.fotoPerfil
     ? `<img src="${dj.fotoPerfil}" alt="${nombre}"
         style="height:340px; object-fit:cover; object-position:top;
@@ -146,27 +150,20 @@ function renderPerfil(dj) {
        </div>`;
 
   return `
-    <!-- HERO A PANTALLA COMPLETA -->
     <div style="background:linear-gradient(135deg, #0d0d1a 0%, #1a0533 50%, #2d0a6b 100%);
                 min-height:420px; position:relative; overflow:hidden; width:100%">
 
-      <!-- Fondo con foto difuminada -->
       ${dj.fotoPerfil ? `
         <div style="position:absolute; inset:0;
                     background:url('${dj.fotoPerfil}') center/cover no-repeat;
                     opacity:0.15; filter:blur(8px)"></div>` : ""}
 
-      <!-- Contenido hero -->
       <div style="max-width:1400px; margin:0 auto; padding:3rem 4rem;
                   display:grid; grid-template-columns:auto 1fr auto;
                   gap:3rem; align-items:flex-end; position:relative; z-index:1">
 
-        <!-- Foto DJ -->
-        <div style="display:flex; align-items:flex-end">
-          ${fotoHTML}
-        </div>
+        <div style="display:flex; align-items:flex-end">${fotoHTML}</div>
 
-        <!-- Info principal -->
         <div style="padding-bottom:1.5rem">
           <p style="color:rgba(255,255,255,0.6); font-size:0.85rem; font-weight:600;
                     letter-spacing:2px; text-transform:uppercase; margin-bottom:0.5rem">
@@ -177,12 +174,9 @@ function renderPerfil(dj) {
             ${nombre}
           </h1>
           ${estrellasHTML}
-          <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem">
-            ${tags}
-          </div>
+          <div style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:1rem">${tags}</div>
         </div>
 
-        <!-- Tarifa destacada -->
         <div style="background:rgba(255,255,255,0.1); backdrop-filter:blur(20px);
                     border:1px solid rgba(255,255,255,0.2); border-radius:20px;
                     padding:1.5rem 2rem; text-align:center; margin-bottom:1.5rem">
@@ -196,77 +190,59 @@ function renderPerfil(dj) {
             Reservar ahora
           </a>
         </div>
-
       </div>
     </div>
 
-    <!-- STATS BAR -->
     <div style="background:#111827; padding:1.25rem 4rem">
       <div style="max-width:1400px; margin:0 auto;
                   display:flex; gap:3rem; align-items:center; flex-wrap:wrap">
         <div style="text-align:center">
-          <p style="color:white; font-size:1.5rem; font-weight:800">
-            ${dj.numValoraciones || 0}
-          </p>
-          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase;
-                    letter-spacing:1px">Valoraciones</p>
+          <p style="color:white; font-size:1.5rem; font-weight:800">${dj.numValoraciones || 0}</p>
+          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Valoraciones</p>
         </div>
         <div style="width:1px; height:40px; background:#374151"></div>
         <div style="text-align:center">
-          <p style="color:white; font-size:1.5rem; font-weight:800">
-            ${dj.sitios?.length || 0}
-          </p>
-          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase;
-                    letter-spacing:1px">Locales</p>
+          <p style="color:white; font-size:1.5rem; font-weight:800">${dj.sitios?.length || 0}</p>
+          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Locales</p>
         </div>
         <div style="width:1px; height:40px; background:#374151"></div>
         <div style="text-align:center">
           <p style="color:white; font-size:1.5rem; font-weight:800">
             ${dj.valoracion > 0 ? dj.valoracion.toFixed(1) + " ⭐" : "Nuevo"}
           </p>
-          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase;
-                    letter-spacing:1px">Valoración</p>
+          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Valoración</p>
         </div>
         <div style="width:1px; height:40px; background:#374151"></div>
         <div style="text-align:center">
           <p style="color:white; font-size:1.5rem; font-weight:800">
             ${dj.tarifa > 0 ? dj.tarifa + " €" : "–"}
           </p>
-          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase;
-                    letter-spacing:1px">Tarifa</p>
+          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Tarifa</p>
         </div>
       </div>
     </div>
 
-    <!-- CONTENIDO PRINCIPAL -->
     <div style="max-width:1400px; margin:0 auto; padding:3rem 4rem;
                 display:grid; grid-template-columns:1fr 400px; gap:3rem">
 
-      <!-- COLUMNA IZQUIERDA -->
       <div style="display:flex; flex-direction:column; gap:2rem">
 
-        <!-- Bio -->
         <div class="card">
-          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem;
-                     color:#111827; display:flex; align-items:center; gap:0.5rem">
+          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
             🎧 Sobre mí
           </h2>
           <p style="color:#4b5563; line-height:2; font-size:1rem">${bio}</p>
         </div>
 
-        <!-- Sitios -->
         <div class="card">
-          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:0.5rem;
-                     color:#111827; display:flex; align-items:center; gap:0.5rem">
+          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:0.5rem; color:#111827">
             🗺️ Dónde he pinchado
           </h2>
           ${sitiosHTML}
         </div>
 
-        <!-- Galería -->
         <div class="card">
-          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem;
-                     color:#111827; display:flex; align-items:center; gap:0.5rem">
+          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
             📸 Galería
           </h2>
           ${galeriaHTML}
@@ -274,7 +250,6 @@ function renderPerfil(dj) {
 
       </div>
 
-      <!-- COLUMNA DERECHA: formulario -->
       <div id="reserva">
         <div class="card" style="position:sticky; top:80px">
           <h2 style="font-size:1.2rem; font-weight:800; margin-bottom:0.25rem">
@@ -321,6 +296,81 @@ function renderPerfil(dj) {
     </div>`;
 }
 
+// ── Conectar galería con lightbox ──────────────────────────
+function conectarGaleria(dj) {
+  if (!dj.galeria?.length) return;
+
+  document.querySelectorAll(".foto-galeria").forEach((div) => {
+    div.addEventListener("click", () => {
+      const index = parseInt(div.dataset.index);
+      abrirLightbox(dj.galeria, index);
+    });
+  });
+}
+
+// ── Lightbox con navegación ────────────────────────────────
+function abrirLightbox(fotos, indexInicial) {
+  let index = indexInicial;
+
+  const lightbox = document.createElement("div");
+  lightbox.style.cssText = `
+    position:fixed; inset:0; background:rgba(0,0,0,0.95);
+    z-index:9999; display:flex; align-items:center;
+    justify-content:center`;
+
+  function renderImagen() {
+    lightbox.innerHTML = `
+      <button id="lb-cerrar"
+        style="position:absolute; top:1.5rem; right:1.5rem;
+               background:rgba(255,255,255,0.15); border:none; color:white;
+               width:44px; height:44px; border-radius:50%; font-size:1.3rem;
+               cursor:pointer">✕</button>
+
+      ${fotos.length > 1 ? `
+        <button id="lb-prev"
+          style="position:absolute; left:1.5rem; background:rgba(255,255,255,0.15);
+                 border:none; color:white; width:50px; height:50px; border-radius:50%;
+                 font-size:1.5rem; cursor:pointer">‹</button>
+        <button id="lb-next"
+          style="position:absolute; right:1.5rem; background:rgba(255,255,255,0.15);
+                 border:none; color:white; width:50px; height:50px; border-radius:50%;
+                 font-size:1.5rem; cursor:pointer">›</button>` : ""}
+
+      <img src="${fotos[index]}" alt="foto"
+        style="max-width:85vw; max-height:85vh; object-fit:contain;
+               border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.5)" />
+
+      <p style="position:absolute; bottom:1.5rem; color:rgba(255,255,255,0.6);
+                font-size:0.85rem">${index + 1} / ${fotos.length}</p>`;
+
+    document.getElementById("lb-cerrar").addEventListener("click", () => lightbox.remove());
+
+    if (fotos.length > 1) {
+      document.getElementById("lb-prev").addEventListener("click", () => {
+        index = (index - 1 + fotos.length) % fotos.length;
+        renderImagen();
+      });
+      document.getElementById("lb-next").addEventListener("click", () => {
+        index = (index + 1) % fotos.length;
+        renderImagen();
+      });
+    }
+  }
+
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox) lightbox.remove();
+  });
+
+  document.addEventListener("keydown", function cerrar(e) {
+    if (e.key === "Escape") { lightbox.remove(); document.removeEventListener("keydown", cerrar); }
+    if (e.key === "ArrowRight") { index = (index + 1) % fotos.length; renderImagen(); }
+    if (e.key === "ArrowLeft")  { index = (index - 1 + fotos.length) % fotos.length; renderImagen(); }
+  });
+
+  renderImagen();
+  document.body.appendChild(lightbox);
+}
+
 function conectarFormulario(dj) {
   const form        = document.getElementById("form-reserva");
   const btnReserva  = document.getElementById("btn-reserva");
@@ -331,10 +381,7 @@ function conectarFormulario(dj) {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    if (!usuarioActual) {
-      avisoLogin.style.display = "block";
-      return;
-    }
+    if (!usuarioActual) { avisoLogin.style.display = "block"; return; }
     if (datosUsuario?.rol === "dj") {
       alertaError.textContent = "Los DJs no pueden hacer reservas.";
       alertaError.className   = "alerta error visible";
