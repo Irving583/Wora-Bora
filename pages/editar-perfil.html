@@ -6,12 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar perfil - Wora Bora</title>
     <link rel="stylesheet" href="../css/Style.css">
+    <link rel="icon" type="image/png" href="../img/Logo.png" />
 </head>
 
 <body>
-    <!--NAVBARR-->
+    <!--NAVBARRA-->
     <nav class="navbarr">
-        <a href="../index.html" class="navbar-logo">WORA BORA</a>
+        <a href="../index.html" class="navbar-logo">
+            <img src="../img/Logo.png" alt="Wora Bora" style="height:40px; width:auto; vertical-align:middle" />
+        </a>
         <div class="navbar-links">
             <a href="marketplace.html">Buscar DJs</a>
             <a href="login.html" id="nav-login">Iniciar Sesión</a>
@@ -48,6 +51,16 @@
                 <img id="img-perfil-preview"
                     style="width:80px; height:80px; border-radius:50%;
                            object-fit:cover; border:3px solid #7B2FBE" />
+            </div>
+
+            <!-- Preview musical -->
+            <div class="form-group">
+                <label for="audioPreview">Preview musical (URL de SoundCloud)</label>
+                <input type="url" id="audioPreview"
+                    placeholder="https://soundcloud.com/usuario/cancion" />
+                <p style="font-size:0.78rem; color:#6b7280; margin-top:0.25rem">
+                    Pega el enlace de una canción de SoundCloud
+                </p>
             </div>
 
             <!-- Biografía -->

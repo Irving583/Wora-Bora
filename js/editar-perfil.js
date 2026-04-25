@@ -13,6 +13,7 @@ const bioInput          = document.getElementById("bio");
 const ciudadInput       = document.getElementById("ciudad");
 const tarifaInput       = document.getElementById("tarifa");
 const fotoPerfilInput   = document.getElementById("fotoPerfil");
+const audioPreviewInput = document.getElementById("audioPreview");
 const disponibleCheck   = document.getElementById("disponible");
 const generosContenedor = document.getElementById("generos-container");
 const btnGuardar        = document.getElementById("btn-guardar");
@@ -23,12 +24,12 @@ const imgPerfilPreview  = document.getElementById("img-perfil-preview");
 
 let generosSeleccionados = [];
 
-// ── Previsualizar foto de perfil al escribir la URL ────────
+// ── Previsualizar foto de perfil ───────────────────────────
 if (fotoPerfilInput) {
   fotoPerfilInput.addEventListener("input", () => {
     const url = fotoPerfilInput.value.trim();
     if (url) {
-      imgPerfilPreview.src = url;
+      imgPerfilPreview.src        = url;
       previewPerfil.style.display = "block";
     } else {
       previewPerfil.style.display = "none";
@@ -93,12 +94,11 @@ onAuthStateChanged(auth, async (usuario) => {
   if (djSnap.exists()) {
     const dj = djSnap.data();
 
-    // Datos básicos
-    bioInput.value          = dj.bio       || "";
-    ciudadInput.value       = dj.ciudad    || "";
-    tarifaInput.value       = dj.tarifa    || "";
+    bioInput.value          = dj.bio        || "";
+    ciudadInput.value       = dj.ciudad     || "";
+    tarifaInput.value       = dj.tarifa     || "";
     disponibleCheck.checked = dj.disponible ?? true;
-    generosSeleccionados    = dj.generos   || [];
+    generosSeleccionados    = dj.generos    || [];
 
     // Foto de perfil
     if (dj.fotoPerfil && fotoPerfilInput) {
@@ -107,13 +107,18 @@ onAuthStateChanged(auth, async (usuario) => {
       previewPerfil.style.display = "block";
     }
 
-    // Sitios donde ha pinchado
+    // Audio preview
+    if (dj.audioPreview && audioPreviewInput) {
+      audioPreviewInput.value = dj.audioPreview;
+    }
+
+    // Sitios
     const sitios = dj.sitios || [];
     document.querySelectorAll(".input-sitio").forEach((input, i) => {
       input.value = sitios[i] || "";
     });
 
-    // Galería de fotos
+    // Galería
     const galeria = dj.galeria || [];
     document.querySelectorAll(".input-galeria").forEach((input, i) => {
       input.value = galeria[i] || "";
@@ -130,12 +135,10 @@ onAuthStateChanged(auth, async (usuario) => {
     btnGuardar.disabled    = true;
     btnGuardar.textContent = "Guardando...";
 
-    // Recoger sitios
     const sitios = Array.from(document.querySelectorAll(".input-sitio"))
       .map(input => input.value.trim())
       .filter(v => v !== "");
 
-    // Recoger galería
     const galeria = Array.from(document.querySelectorAll(".input-galeria"))
       .map(input => input.value.trim())
       .filter(v => v !== "");
@@ -147,7 +150,8 @@ onAuthStateChanged(auth, async (usuario) => {
         tarifa:        parseFloat(tarifaInput.value) || 0,
         generos:       generosSeleccionados,
         disponible:    disponibleCheck.checked,
-        fotoPerfil:    fotoPerfilInput?.value.trim() || "",
+        fotoPerfil:    fotoPerfilInput?.value.trim()   || "",
+        audioPreview:  audioPreviewInput?.value.trim() || "",
         sitios,
         galeria,
         actualizadoEn: serverTimestamp()

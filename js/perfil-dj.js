@@ -226,7 +226,16 @@ function renderPerfil(dj) {
                 display:grid; grid-template-columns:1fr 400px; gap:3rem">
 
       <div style="display:flex; flex-direction:column; gap:2rem">
-
+${dj.audioPreview ? `
+<div class="card">
+  <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
+    🎵 Preview musical
+  </h2>
+  <iframe width="100%" height="166" scrolling="no" frameborder="no"
+    allow="autoplay"
+    src="https://w.soundcloud.com/player/?url=${encodeURIComponent(dj.audioPreview)}&color=%237B2FBE&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+  </iframe>
+</div>` : ""}
         <div class="card">
           <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
             🎧 Sobre mí
