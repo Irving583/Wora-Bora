@@ -10,7 +10,7 @@ import { doc, getDoc, collection, query, where,
 
 const contenido = document.getElementById("contenido");
 const btnLogout = document.getElementById("btn-logout");
-let usuarioActual     = null;
+let usuarioActual      = null;
 let datosUsuarioActual = null;
 
 if (btnLogout) {
@@ -28,12 +28,10 @@ onAuthStateChanged(auth, async (usuario) => {
 
   usuarioActual = usuario;
 
- const snap = await getDoc(doc(db, "usuarios", usuario.uid));
-console.log("UID:", usuario.uid);
-console.log("Existe el documento:", snap.exists());
-console.log("Datos:", snap.data());
-const datos = snap.data();
-datosUsuarioActual = datos;
+  const snap = await getDoc(doc(db, "usuarios", usuario.uid));
+  const datos = snap.data();
+  datosUsuarioActual = datos;
+
   if (datos.rol === "admin") {
     await dashboardAdmin(datos);
   } else if (datos.rol === "dj") {
@@ -47,11 +45,9 @@ datosUsuarioActual = datos;
 // DASHBOARD ADMIN
 // ══════════════════════════════════════════════════════════
 async function dashboardAdmin(datos) {
-  // Cargar todos los DJs
   const djsSnap = await getDocs(collection(db, "djs"));
   const djs     = djsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
-  // Cargar TODAS las reservas
   const reservasSnap = await getDocs(
     query(collection(db, "reservas"), orderBy("creadoEn", "desc"))
   );
@@ -59,12 +55,10 @@ async function dashboardAdmin(datos) {
   const todasReservas = await Promise.all(
     reservasSnap.docs.map(async (d) => {
       const r = { id: d.id, ...d.data() };
-      // Nombre del DJ
       try {
         const djSnap = await getDoc(doc(db, "djs", r.idDJ));
         if (djSnap.exists()) r.nombreDJ = djSnap.data().nombre;
       } catch(e) {}
-      // Nombre del contratante
       try {
         const uSnap = await getDoc(doc(db, "usuarios", r.idUsuario));
         if (uSnap.exists()) r.nombreUsuario = uSnap.data().nombre;
@@ -83,13 +77,12 @@ async function dashboardAdmin(datos) {
 
       <div class="dashboard-header">
         <div>
-          <h1>Panel de Administración 🛠️</h1>
+          <h1>Panel de Administracion</h1>
           <p style="color:#6b7280">Gestiona todas las reservas de la plataforma</p>
         </div>
         <a href="marketplace.html" class="btn btn-secondary">Ver marketplace</a>
       </div>
 
-      <!-- Stats globales -->
       <div class="stats-grid" style="grid-template-columns:repeat(5,1fr)">
         <div class="stat-card">
           <div class="stat-numero">${todasReservas.length}</div>
@@ -113,7 +106,6 @@ async function dashboardAdmin(datos) {
         </div>
       </div>
 
-      <!-- Filtro por DJ -->
       <div style="margin-bottom:1.5rem; display:flex; align-items:center; gap:1rem; flex-wrap:wrap">
         <h2 style="font-size:1.1rem; font-weight:700">Todas las reservas</h2>
         <select id="filtro-dj-admin"
@@ -133,11 +125,10 @@ async function dashboardAdmin(datos) {
         </select>
       </div>
 
-      <!-- Lista de reservas -->
       <div id="lista-admin" class="reservas-grid">
         ${todasReservas.length === 0
           ? `<div class="vacio">
-               <div class="vacio-emoji">📋</div>
+               <div class="vacio-emoji"></div>
                <p>No hay reservas en la plataforma</p>
              </div>`
           : todasReservas.map(r => tarjetaAdmin(r)).join("")
@@ -146,7 +137,6 @@ async function dashboardAdmin(datos) {
 
     </div>`;
 
-  // Conectar filtros
   const filtroDJ     = document.getElementById("filtro-dj-admin");
   const filtroEstado = document.getElementById("filtro-estado-admin");
 
@@ -154,13 +144,13 @@ async function dashboardAdmin(datos) {
     const djSelec     = filtroDJ.value;
     const estadoSelec = filtroEstado.value;
     const filtradas   = todasReservas.filter(r => {
-      if (djSelec     && r.idDJ    !== djSelec)     return false;
-      if (estadoSelec && r.estado  !== estadoSelec)  return false;
+      if (djSelec     && r.idDJ   !== djSelec)    return false;
+      if (estadoSelec && r.estado !== estadoSelec) return false;
       return true;
     });
     document.getElementById("lista-admin").innerHTML =
       filtradas.length === 0
-        ? `<div class="vacio"><div class="vacio-emoji">📋</div><p>No hay reservas con esos filtros</p></div>`
+        ? `<div class="vacio"><p>No hay reservas con esos filtros</p></div>`
         : filtradas.map(r => tarjetaAdmin(r)).join("");
     conectarBotonesAdmin(datos);
   }
@@ -184,18 +174,18 @@ function tarjetaAdmin(r) {
         <span class="reserva-evento">${r.evento}</span>
         <span class="badge badge-${r.estado}">${r.estado}</span>
       </div>
-      <p class="reserva-fecha">📅 ${r.fecha}</p>
+      <p class="reserva-fecha">Fecha: ${r.fecha}</p>
       <p style="font-size:0.85rem; color:#7B2FBE; font-weight:600">
-        🎧 DJ: ${r.nombreDJ || "DJ Anónimo"}
+        DJ: ${r.nombreDJ || "DJ Anonimo"}
       </p>
       <p style="font-size:0.85rem; color:#6b7280; font-weight:600">
-        👤 Contratante: ${r.nombreUsuario || "Desconocido"}
+        Contratante: ${r.nombreUsuario || "Desconocido"}
       </p>
       ${r.mensaje
         ? `<p style="font-size:0.85rem; color:#6b7280; font-style:italic">"${r.mensaje}"</p>`
         : ""}
       ${r.pagado
-        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">✔ Pago realizado</p>`
+        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">Pago realizado</p>`
         : ""}
       ${acciones}
     </div>`;
@@ -257,7 +247,7 @@ async function dashboardContratante(uid, datos) {
     <div class="dashboard">
       <div class="dashboard-header">
         <div>
-          <h1>Hola, ${datos.nombre.split(" ")[0]} 👋</h1>
+          <h1>Hola, ${datos.nombre.split(" ")[0]}</h1>
           <p>Panel de contratante · gestiona tus reservas</p>
         </div>
         <a href="marketplace.html" class="btn btn-primary">Buscar DJs</a>
@@ -286,8 +276,7 @@ async function dashboardContratante(uid, datos) {
       <div class="reservas-grid">
         ${reservas.length === 0
           ? `<div class="vacio">
-               <div class="vacio-emoji">📋</div>
-               <p>Aún no has hecho ninguna reserva</p>
+               <p>Aun no has hecho ninguna reserva</p>
              </div>`
           : reservas.map(r => tarjetaContratante(r)).join("")
         }
@@ -313,19 +302,19 @@ function tarjetaContratante(r) {
   const btnPago = r.estado === "aceptada" && !r.pagado
     ? `<button class="btn btn-primary btn-pago" data-id="${r.id}"
          style="font-size:0.82rem; margin-top:0.25rem">
-         💳 Simular pago
+         Simular pago
        </button>` : "";
 
   const btnValorar = r.estado === "completada" && !r.valorado
     ? `<button class="btn btn-secondary btn-valorar"
          data-id="${r.id}" data-dj="${r.idDJ}"
          style="font-size:0.82rem; margin-top:0.25rem">
-         ⭐ Valorar DJ
+         Valorar DJ
        </button>` : "";
 
   const yaValorado = r.valorado
     ? `<p style="color:#f59e0b; font-size:0.82rem; font-weight:600">
-         ⭐ Ya has valorado este evento
+         Ya has valorado este evento
        </p>` : "";
 
   return `
@@ -334,15 +323,15 @@ function tarjetaContratante(r) {
         <span class="reserva-evento">${r.evento}</span>
         <span class="badge badge-${r.estado}">${r.estado}</span>
       </div>
-      <p class="reserva-fecha">📅 ${r.fecha}</p>
+      <p class="reserva-fecha">Fecha: ${r.fecha}</p>
       <p style="font-size:0.85rem; color:#7B2FBE; font-weight:600">
-        🎧 DJ: ${r.nombreDJ || "DJ Anónimo"}
+        DJ: ${r.nombreDJ || "DJ Anonimo"}
       </p>
       ${r.mensaje
         ? `<p style="font-size:0.85rem; color:#6b7280; font-style:italic">"${r.mensaje}"</p>`
         : ""}
       ${r.pagado
-        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">✔ Pago realizado</p>`
+        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">Pago realizado</p>`
         : ""}
       ${yaValorado}
       ${btnPago}
@@ -370,7 +359,7 @@ async function dashboardDJ(uid, datos) {
     <div class="dashboard">
       <div class="dashboard-header">
         <div>
-          <h1>Hola, ${datos.nombre.split(" ")[0]} 👋</h1>
+          <h1>Hola, ${datos.nombre.split(" ")[0]}</h1>
           <p>Panel de DJ · gestiona tus solicitudes</p>
         </div>
         <a href="editar-perfil.html" class="btn btn-secondary">Editar perfil</a>
@@ -399,8 +388,7 @@ async function dashboardDJ(uid, datos) {
       <div class="reservas-grid">
         ${reservas.length === 0
           ? `<div class="vacio">
-               <div class="vacio-emoji">📋</div>
-               <p>Aún no has recibido solicitudes</p>
+               <p>Aun no has recibido solicitudes</p>
              </div>`
           : reservas.map(r => tarjetaDJ(r)).join("")
         }
@@ -427,9 +415,9 @@ function tarjetaDJ(r) {
         <span class="reserva-evento">${r.evento}</span>
         <span class="badge badge-${r.estado}">${r.estado}</span>
       </div>
-      <p class="reserva-fecha">📅 ${r.fecha}</p>
+      <p class="reserva-fecha">Fecha: ${r.fecha}</p>
       ${r.pagado
-        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">✔ Pago recibido</p>`
+        ? `<p style="color:#15803d; font-size:0.82rem; font-weight:600">Pago recibido</p>`
         : ""}
       ${acciones}
     </div>`;
@@ -466,13 +454,13 @@ function mostrarModalValoracion(idReserva, idDJ) {
   modal.innerHTML = `
     <div style="background:white; border-radius:20px; padding:2rem;
                 width:90%; max-width:440px; box-shadow:0 20px 60px rgba(0,0,0,0.3)">
-      <h2 style="font-size:1.3rem; font-weight:700; margin-bottom:0.25rem">⭐ Valorar DJ</h2>
+      <h2 style="font-size:1.3rem; font-weight:700; margin-bottom:0.25rem">Valorar DJ</h2>
       <p style="color:#6b7280; font-size:0.88rem; margin-bottom:1.5rem">
         Comparte tu experiencia con la comunidad
       </p>
       <div style="margin-bottom:1.25rem">
         <label style="font-size:0.85rem; font-weight:600; color:#374151;
-                      display:block; margin-bottom:0.5rem">Puntuación</label>
+                      display:block; margin-bottom:0.5rem">Puntuacion</label>
         <div id="estrellas-selector"
              style="display:flex; gap:0.5rem; font-size:2rem; cursor:pointer">
           <span class="estrella" data-valor="1">☆</span>
@@ -486,7 +474,7 @@ function mostrarModalValoracion(idReserva, idDJ) {
         <label style="font-size:0.85rem; font-weight:600; color:#374151;
                       display:block; margin-bottom:0.5rem">Comentario</label>
         <textarea id="comentario-valoracion" rows="3"
-          placeholder="¿Cómo fue tu experiencia con este DJ?"
+          placeholder="Como fue tu experiencia con este DJ?"
           style="width:100%; padding:0.6rem 0.9rem; border:1.5px solid #d1d5db;
                  border-radius:8px; font-family:inherit; font-size:0.95rem;
                  resize:none; outline:none"></textarea>
@@ -499,7 +487,7 @@ function mostrarModalValoracion(idReserva, idDJ) {
           Cancelar
         </button>
         <button id="btn-enviar-valoracion" class="btn btn-primary" style="flex:1">
-          Enviar valoración
+          Enviar valoracion
         </button>
       </div>
     </div>`;
@@ -538,7 +526,7 @@ function mostrarModalValoracion(idReserva, idDJ) {
     const alertaVal  = modal.querySelector("#alerta-valoracion");
 
     if (puntuacion === 0) {
-      alertaVal.textContent   = "Por favor selecciona una puntuación.";
+      alertaVal.textContent   = "Por favor selecciona una puntuacion.";
       alertaVal.style.display = "block";
       return;
     }
@@ -564,11 +552,11 @@ function mostrarModalValoracion(idReserva, idDJ) {
       await dashboardContratante(usuarioActual.uid, snap.data());
 
     } catch (error) {
-      alertaVal.textContent   = "Error al enviar. Inténtalo de nuevo.";
+      alertaVal.textContent   = "Error al enviar. Intentalo de nuevo.";
       alertaVal.style.display = "block";
       console.error(error);
       btnEnviar.disabled    = false;
-      btnEnviar.textContent = "Enviar valoración";
+      btnEnviar.textContent = "Enviar valoracion";
     }
   });
 }

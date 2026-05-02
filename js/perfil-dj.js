@@ -61,11 +61,11 @@ async function cargarPerfil() {
 }
 
 function renderPerfil(dj) {
-  const nombre  = dj.nombre || "DJ Anónimo";
+  const nombre  = dj.nombre || "DJ Anonimo";
   const inicial = nombre[0].toUpperCase();
-  const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} €` : "A consultar";
+  const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} EUR` : "A consultar";
   const ciudad  = dj.ciudad || "Ciudad no indicada";
-  const bio     = dj.bio    || "Este DJ aún no ha añadido una descripción.";
+  const bio     = dj.bio    || "Este DJ aun no ha añadido una descripcion.";
 
   const colores = [
     { bg: "#EDE7F6", color: "#4A148C" },
@@ -112,9 +112,10 @@ function renderPerfil(dj) {
                          font-weight:700; font-size:0.85rem">${i + 1}</span>
             <span style="font-weight:600; color:#111827">${s}</span>
           </div>
-          <span style="font-size:1.2rem">🎧</span>
+          <span style="font-size:0.75rem; font-weight:600; color:#7B2FBE;
+                       text-transform:uppercase; letter-spacing:1px">DJ</span>
         </div>`).join("")
-    : '<p style="color:#6b7280; padding:1rem 0">Aún no hay sitios añadidos</p>';
+    : '<p style="color:#6b7280; padding:1rem 0">Aun no hay sitios añadidos</p>';
 
   const galeriaHTML = dj.galeria?.length > 0
     ? `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
@@ -129,14 +130,15 @@ function renderPerfil(dj) {
               onmouseout="this.style.transform='scale(1)'" />
             <div style="position:absolute; inset:0; background:rgba(0,0,0,0);
                         display:flex; align-items:center; justify-content:center;
-                        transition:background 0.2s; font-size:2rem; color:white; opacity:0"
-                 onmouseover="this.style.background='rgba(0,0,0,0.3)'; this.style.opacity='1'"
+                        transition:background 0.2s; color:white; opacity:0;
+                        font-size:0.85rem; font-weight:700; letter-spacing:1px"
+                 onmouseover="this.style.background='rgba(0,0,0,0.4)'; this.style.opacity='1'"
                  onmouseout="this.style.background='rgba(0,0,0,0)'; this.style.opacity='0'">
-              🔍
+              Ver
             </div>
           </div>`).join("")}
        </div>`
-    : '<p style="color:#6b7280">Aún no hay fotos en la galería</p>';
+    : '<p style="color:#6b7280">Aun no hay fotos en la galeria</p>';
 
   const fotoHTML = dj.fotoPerfil
     ? `<img src="${dj.fotoPerfil}" alt="${nombre}"
@@ -208,14 +210,14 @@ function renderPerfil(dj) {
         <div style="width:1px; height:40px; background:#374151"></div>
         <div style="text-align:center">
           <p style="color:white; font-size:1.5rem; font-weight:800">
-            ${dj.valoracion > 0 ? dj.valoracion.toFixed(1) + " ⭐" : "Nuevo"}
+            ${dj.valoracion > 0 ? dj.valoracion.toFixed(1) : "Nuevo"}
           </p>
-          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Valoración</p>
+          <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Valoracion</p>
         </div>
         <div style="width:1px; height:40px; background:#374151"></div>
         <div style="text-align:center">
           <p style="color:white; font-size:1.5rem; font-weight:800">
-            ${dj.tarifa > 0 ? dj.tarifa + " €" : "–"}
+            ${dj.tarifa > 0 ? dj.tarifa + " EUR" : "–"}
           </p>
           <p style="color:#9ca3af; font-size:0.78rem; text-transform:uppercase; letter-spacing:1px">Tarifa</p>
         </div>
@@ -226,33 +228,35 @@ function renderPerfil(dj) {
                 display:grid; grid-template-columns:1fr 400px; gap:3rem">
 
       <div style="display:flex; flex-direction:column; gap:2rem">
-${dj.audioPreview ? `
-<div class="card">
-  <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
-    🎵 Preview musical
-  </h2>
-  <iframe width="100%" height="166" scrolling="no" frameborder="no"
-    allow="autoplay"
-    src="https://w.soundcloud.com/player/?url=${encodeURIComponent(dj.audioPreview)}&color=%237B2FBE&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
-  </iframe>
-</div>` : ""}
+
+        ${dj.audioPreview ? `
         <div class="card">
           <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
-            🎧 Sobre mí
+            Preview musical
+          </h2>
+          <iframe width="100%" height="166" scrolling="no" frameborder="no"
+            allow="autoplay"
+            src="https://w.soundcloud.com/player/?url=${encodeURIComponent(dj.audioPreview)}&color=%237B2FBE&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false">
+          </iframe>
+        </div>` : ""}
+
+        <div class="card">
+          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
+            Sobre mi
           </h2>
           <p style="color:#4b5563; line-height:2; font-size:1rem">${bio}</p>
         </div>
 
         <div class="card">
           <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:0.5rem; color:#111827">
-            🗺️ Dónde he pinchado
+            Donde he pinchado
           </h2>
           ${sitiosHTML}
         </div>
 
         <div class="card">
           <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
-            📸 Galería
+            Galeria de fotos
           </h2>
           ${galeriaHTML}
         </div>
@@ -265,7 +269,7 @@ ${dj.audioPreview ? `
             Solicitar reserva
           </h2>
           <p style="color:#6b7280; font-size:0.85rem; margin-bottom:1.25rem">
-            El DJ recibirá tu solicitud directamente
+            El DJ recibira tu solicitud directamente
           </p>
 
           <div id="alerta-reserva" class="alerta error"></div>
@@ -285,13 +289,13 @@ ${dj.audioPreview ? `
             <div class="form-group">
               <label for="mensaje">Mensaje para el DJ</label>
               <textarea id="mensaje" rows="4"
-                placeholder="Cuéntale los detalles..."></textarea>
+                placeholder="Cuentale los detalles..."></textarea>
             </div>
 
             <p id="aviso-login" style="text-align:center; font-size:0.85rem;
                color:#6b7280; margin-bottom:0.75rem; display:none">
               Necesitas <a href="login.html"
-              style="color:#7B2FBE; font-weight:600">iniciar sesión</a> para reservar
+              style="color:#7B2FBE; font-weight:600">iniciar sesion</a> para reservar
             </p>
 
             <button type="submit" id="btn-reserva"
@@ -305,10 +309,9 @@ ${dj.audioPreview ? `
     </div>`;
 }
 
-// ── Conectar galería con lightbox ──────────────────────────
+// ── Conectar galeria con lightbox ──────────────────────────
 function conectarGaleria(dj) {
   if (!dj.galeria?.length) return;
-
   document.querySelectorAll(".foto-galeria").forEach((div) => {
     div.addEventListener("click", () => {
       const index = parseInt(div.dataset.index);
@@ -317,15 +320,14 @@ function conectarGaleria(dj) {
   });
 }
 
-// ── Lightbox con navegación ────────────────────────────────
+// ── Lightbox con navegacion ────────────────────────────────
 function abrirLightbox(fotos, indexInicial) {
   let index = indexInicial;
 
   const lightbox = document.createElement("div");
   lightbox.style.cssText = `
     position:fixed; inset:0; background:rgba(0,0,0,0.95);
-    z-index:9999; display:flex; align-items:center;
-    justify-content:center`;
+    z-index:9999; display:flex; align-items:center; justify-content:center`;
 
   function renderImagen() {
     lightbox.innerHTML = `
@@ -333,17 +335,17 @@ function abrirLightbox(fotos, indexInicial) {
         style="position:absolute; top:1.5rem; right:1.5rem;
                background:rgba(255,255,255,0.15); border:none; color:white;
                width:44px; height:44px; border-radius:50%; font-size:1.3rem;
-               cursor:pointer">✕</button>
+               cursor:pointer">X</button>
 
       ${fotos.length > 1 ? `
         <button id="lb-prev"
           style="position:absolute; left:1.5rem; background:rgba(255,255,255,0.15);
                  border:none; color:white; width:50px; height:50px; border-radius:50%;
-                 font-size:1.5rem; cursor:pointer">‹</button>
+                 font-size:1.5rem; cursor:pointer">&lt;</button>
         <button id="lb-next"
           style="position:absolute; right:1.5rem; background:rgba(255,255,255,0.15);
                  border:none; color:white; width:50px; height:50px; border-radius:50%;
-                 font-size:1.5rem; cursor:pointer">›</button>` : ""}
+                 font-size:1.5rem; cursor:pointer">&gt;</button>` : ""}
 
       <img src="${fotos[index]}" alt="foto"
         style="max-width:85vw; max-height:85vh; object-fit:contain;
@@ -352,14 +354,14 @@ function abrirLightbox(fotos, indexInicial) {
       <p style="position:absolute; bottom:1.5rem; color:rgba(255,255,255,0.6);
                 font-size:0.85rem">${index + 1} / ${fotos.length}</p>`;
 
-    document.getElementById("lb-cerrar").addEventListener("click", () => lightbox.remove());
+    lightbox.querySelector("#lb-cerrar").addEventListener("click", () => lightbox.remove());
 
     if (fotos.length > 1) {
-      document.getElementById("lb-prev").addEventListener("click", () => {
+      lightbox.querySelector("#lb-prev").addEventListener("click", () => {
         index = (index - 1 + fotos.length) % fotos.length;
         renderImagen();
       });
-      document.getElementById("lb-next").addEventListener("click", () => {
+      lightbox.querySelector("#lb-next").addEventListener("click", () => {
         index = (index + 1) % fotos.length;
         renderImagen();
       });
@@ -424,11 +426,11 @@ function conectarFormulario(dj) {
       });
 
       form.style.display      = "none";
-      alertaExito.textContent = "✅ ¡Solicitud enviada! El DJ revisará tu petición pronto.";
+      alertaExito.textContent = "Solicitud enviada. El DJ revisara tu peticion pronto.";
       alertaExito.className   = "alerta exito visible";
 
     } catch (error) {
-      alertaError.textContent = "Error al enviar. Inténtalo de nuevo.";
+      alertaError.textContent = "Error al enviar. Intentalo de nuevo.";
       alertaError.className   = "alerta error visible";
       console.error(error);
       btnReserva.disabled    = false;

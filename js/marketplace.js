@@ -48,7 +48,6 @@ async function cargarDJs() {
   } catch (error) {
     listaDjs.innerHTML = `
       <div class="vacio">
-        <div class="vacio-emoji">⚠️</div>
         <p>Error al cargar los DJs.</p>
       </div>`;
     console.error(error);
@@ -57,9 +56,9 @@ async function cargarDJs() {
 
 // ── Crear tarjeta estilo Real Madrid ───────────────────────
 function crearTarjeta(dj) {
-  const nombre  = dj.nombre || "DJ Anónimo";
+  const nombre  = dj.nombre || "DJ Anonimo";
   const inicial = nombre[0].toUpperCase();
-  const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} €` : "A consultar";
+  const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} EUR` : "A consultar";
 
   const colores = [
     { bg: "#4A148C", color: "#EDE7F6" },
@@ -71,7 +70,6 @@ function crearTarjeta(dj) {
   ];
   const color = colores[nombre.charCodeAt(0) % colores.length];
 
-  // Estrellas
   let estrellas = "";
   if (dj.valoracion > 0) {
     const llenas = Math.round(dj.valoracion);
@@ -80,7 +78,6 @@ function crearTarjeta(dj) {
     </span>`;
   }
 
-  // Géneros
   const tags = dj.generos?.length > 0
     ? dj.generos.map(g => `
         <span style="background:rgba(255,255,255,0.2); color:white;
@@ -90,7 +87,6 @@ function crearTarjeta(dj) {
         </span>`).join("")
     : "";
 
-  // Foto o gradiente con inicial
   const fondoHTML = dj.fotoPerfil
     ? `background: url('${dj.fotoPerfil}') center/cover no-repeat`
     : `background: linear-gradient(135deg, ${color.bg}, #7B2FBE)`;
@@ -107,10 +103,8 @@ function crearTarjeta(dj) {
        onmouseout="this.style.transform='translateY(0)';
                   this.style.boxShadow='0 4px 20px rgba(0,0,0,0.15)'">
 
-      <!-- Foto de fondo -->
       <div style="${fondoHTML}; width:100%; height:100%; position:absolute; inset:0"></div>
 
-      <!-- Inicial si no hay foto -->
       ${!dj.fotoPerfil ? `
         <div style="position:absolute; inset:0; display:flex;
                     align-items:center; justify-content:center">
@@ -119,7 +113,6 @@ function crearTarjeta(dj) {
           </span>
         </div>` : ""}
 
-      <!-- Degradado inferior -->
       <div style="position:absolute; inset:0;
                   background:linear-gradient(to top,
                     rgba(0,0,0,0.9) 0%,
@@ -127,27 +120,22 @@ function crearTarjeta(dj) {
                     rgba(0,0,0,0) 100%)">
       </div>
 
-      <!-- Info del DJ -->
-      <div style="position:absolute; bottom:0; left:0; right:0;
-                  padding:1.5rem 1.25rem">
+      <div style="position:absolute; bottom:0; left:0; right:0; padding:1.5rem 1.25rem">
 
-        <!-- Géneros -->
         ${tags ? `<div style="display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.5rem">
           ${tags}
         </div>` : ""}
 
-        <!-- Nombre -->
         <h3 style="color:white; font-size:1.4rem; font-weight:800;
                    margin-bottom:0.25rem; line-height:1.2;
                    text-shadow:0 2px 8px rgba(0,0,0,0.5)">
           ${nombre}
         </h3>
 
-        <!-- Ciudad y tarifa -->
         <div style="display:flex; align-items:center;
                     justify-content:space-between; flex-wrap:wrap; gap:0.5rem">
           <p style="color:rgba(255,255,255,0.8); font-size:0.85rem; margin:0">
-            ${dj.ciudad ? `📍 ${dj.ciudad}` : ""}
+            ${dj.ciudad ? dj.ciudad : ""}
           </p>
           <p style="color:white; font-weight:700; font-size:0.9rem; margin:0;
                     background:rgba(123,47,190,0.8); padding:0.2rem 0.6rem;
@@ -156,12 +144,10 @@ function crearTarjeta(dj) {
           </p>
         </div>
 
-        <!-- Estrellas -->
         ${estrellas ? `<div style="margin-top:0.4rem">${estrellas}</div>` : ""}
 
       </div>
 
-      <!-- Overlay hover -->
       <div style="position:absolute; inset:0; background:rgba(123,47,190,0);
                   transition:background 0.3s; display:flex; align-items:center;
                   justify-content:center"
@@ -180,7 +166,6 @@ function mostrarDJs(djs) {
   if (djs.length === 0) {
     listaDjs.innerHTML = `
       <div class="vacio">
-        <div class="vacio-emoji">🎧</div>
         <p>No se encontraron DJs con esos filtros</p>
       </div>`;
     return;
