@@ -10,23 +10,25 @@
 </head>
 
 <body>
-    <!--NAVBARRA-->
     <nav class="navbarr">
         <a href="../index.html" class="navbar-logo">
             <img src="../img/Logo.png" alt="Wora Bora" style="height:40px; width:auto; vertical-align:middle" />
         </a>
         <div class="navbar-links">
             <a href="marketplace.html">Buscar DJs</a>
-            <a href="dashboard.html">Mi panel</a>
-            <a href="register.html" class="btn btn-primary">Cerrar sesión</a>
+            <a href="login.html" id="nav-login">Iniciar sesion</a>
+            <a href="register.html" id="nav-register" class="btn btn-primary">Registrarse</a>
+            <a href="dashboard.html" id="nav-dashboard" style="display:none">Mi panel</a>
+            <button id="nav-logout" style="display:none" class="btn btn-secondary">Salir</button>
         </div>
     </nav>
 
     <div id="contenido">
         <div class="spinner"></div>
     </div>
+
     <footer class="footer">
-        <p>© 2026 Wora Bora Agency</p>
+        <p>2026 Wora Bora Agency</p>
     </footer>
 
     <script type="module" src="../js/dashboard.js"></script>
