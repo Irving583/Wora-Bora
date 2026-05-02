@@ -44,7 +44,17 @@ async function cargarDJs() {
     const q        = query(collection(db, "djs"), where("disponible", "==", true));
     const snapshot = await getDocs(q);
     todosDJs       = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    mostrarDJs(todosDJs);
+
+    // Leer genero de la URL si viene desde la pagina de inicio
+    const params    = new URLSearchParams(window.location.search);
+    const generoURL = params.get("genero");
+    if (generoURL && filtroGenero) {
+      filtroGenero.value = generoURL;
+      aplicarFiltros();
+    } else {
+      mostrarDJs(todosDJs);
+    }
+
   } catch (error) {
     listaDjs.innerHTML = `
       <div class="vacio">
