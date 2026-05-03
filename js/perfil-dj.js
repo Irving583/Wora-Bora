@@ -4,7 +4,8 @@
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, getDoc, collection, addDoc, serverTimestamp }
+import { doc, getDoc, collection, addDoc, serverTimestamp,
+         getDocs, query, where, orderBy }
   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const contenido = document.getElementById("contenido");
@@ -51,9 +52,18 @@ async function cargarPerfil() {
       return;
     }
     const dj = { id: djSnap.id, ...djSnap.data() };
-    contenido.innerHTML = renderPerfil(dj);
-    conectarFormulario(dj);
-    conectarGaleria(dj);
+
+// Cargar valoraciones del DJ
+const vSnap = await getDocs(query(
+  collection(db, "valoraciones"),
+  where("idDJ", "==", idDJ),
+  orderBy("creadoEn", "desc")
+));
+const valoraciones = vSnap.docs.map(d => d.data());
+
+contenido.innerHTML = renderPerfil(dj, valoraciones);
+conectarFormulario(dj);
+conectarGaleria(dj);
   } catch (error) {
     contenido.innerHTML = '<p style="text-align:center;padding:4rem;color:red">Error al cargar.</p>';
     console.error(error);
