@@ -4,9 +4,10 @@
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-import { doc, getDoc, collection, addDoc, serverTimestamp,
-         getDocs, query, where, orderBy }
-  from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+import {
+  doc, getDoc, collection, addDoc, serverTimestamp,
+  getDocs, query, where, orderBy
+} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const contenido = document.getElementById("contenido");
 
@@ -53,24 +54,24 @@ async function cargarPerfil() {
     }
     const dj = { id: djSnap.id, ...djSnap.data() };
 
-// Cargar valoraciones del DJ
-const vSnap = await getDocs(query(
-  collection(db, "valoraciones"),
-  where("idDJ", "==", idDJ),
-  orderBy("creadoEn", "desc")
-));
-const valoraciones = vSnap.docs.map(d => d.data());
+    // Cargar valoraciones del DJ
+    const vSnap = await getDocs(query(
+      collection(db, "valoraciones"),
+      where("idDJ", "==", idDJ),
+      orderBy("creadoEn", "desc")
+    ));
+    const valoraciones = vSnap.docs.map(d => d.data());
 
-contenido.innerHTML = renderPerfil(dj, valoraciones);
-conectarFormulario(dj);
-conectarGaleria(dj);
+    contenido.innerHTML = renderPerfil(dj, valoraciones);
+    conectarFormulario(dj);
+    conectarGaleria(dj);
   } catch (error) {
     contenido.innerHTML = '<p style="text-align:center;padding:4rem;color:red">Error al cargar.</p>';
     console.error(error);
   }
 }
 
-function renderPerfil(dj) {
+function renderPerfil(dj, valoraciones = []) {
   const nombre  = dj.nombre || "DJ Anonimo";
   const inicial = nombre[0].toUpperCase();
   const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} EUR` : "A consultar";
@@ -149,6 +150,23 @@ function renderPerfil(dj) {
           </div>`).join("")}
        </div>`
     : '<p style="color:#6b7280">Aun no hay fotos en la galeria</p>';
+
+  const valoracionesHTML = valoraciones.length === 0
+    ? '<p style="color:#6b7280">Aun no hay valoraciones</p>'
+    : valoraciones.map(v => `
+        <div style="padding:1rem 0; border-bottom:1px solid #f3f4f6">
+          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.4rem">
+            <span style="color:#f59e0b; font-size:1rem">
+              ${"★".repeat(v.puntuacion)}${"☆".repeat(5 - v.puntuacion)}
+            </span>
+            <span style="font-weight:700; color:#111827">${v.puntuacion}/5</span>
+          </div>
+          ${v.comentario
+            ? `<p style="color:#4b5563; font-size:0.95rem; font-style:italic">
+                "${v.comentario}"
+               </p>`
+            : ""}
+        </div>`).join("");
 
   const fotoHTML = dj.fotoPerfil
     ? `<img src="${dj.fotoPerfil}" alt="${nombre}"
@@ -262,6 +280,13 @@ function renderPerfil(dj) {
             Donde he pinchado
           </h2>
           ${sitiosHTML}
+        </div>
+
+        <div class="card">
+          <h2 style="font-size:1.3rem; font-weight:800; margin-bottom:1rem; color:#111827">
+            Valoraciones de clientes
+          </h2>
+          ${valoracionesHTML}
         </div>
 
         <div class="card">
