@@ -8,21 +8,21 @@ import { doc, setDoc, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const nombreInput = document.getElementById("nombre");
-const emailInput  = document.getElementById("email");
-const passInput   = document.getElementById("password");
+const emailInput = document.getElementById("email");
+const passInput = document.getElementById("password");
 const btnRegister = document.getElementById("btn-register");
-const alerta      = document.getElementById("alerta");
+const alerta = document.getElementById("alerta");
 
 // ── Mostrar error ──────────────────────────────────────────
 function mostrarError(mensaje) {
   alerta.textContent = mensaje;
-  alerta.className   = "alerta error visible";
+  alerta.className = "alerta error visible";
 }
 
 // ── Crear cuenta ───────────────────────────────────────────
 btnRegister.addEventListener("click", async () => {
-  const nombre   = nombreInput.value.trim();
-  const email    = emailInput.value.trim();
+  const nombre = nombreInput.value.trim();
+  const email = emailInput.value.trim();
   const password = passInput.value;
 
   // Validaciones
@@ -34,15 +34,23 @@ btnRegister.addEventListener("click", async () => {
     mostrarError("La contraseña debe tener al menos 6 caracteres.");
     return;
   }
+  if (!/[A-Z]/.test(password)) {
+    mostrarError("La contraseña debe contener al menos una letra mayuscula.");
+    return;
+  }
+  if (!/[0-9]/.test(password)) {
+    mostrarError("La contraseña debe contener al menos un numero.");
+    return;
+  }
 
-  btnRegister.disabled    = true;
+  btnRegister.disabled = true;
   btnRegister.textContent = "Creando cuenta...";
-  alerta.className        = "alerta error";
+  alerta.className = "alerta error";
 
   try {
     // 1. Crear usuario en Firebase Auth
     const credencial = await createUserWithEmailAndPassword(auth, email, password);
-    const uid        = credencial.user.uid;
+    const uid = credencial.user.uid;
 
     // 2. Guardar nombre en el perfil Auth
     await updateProfile(credencial.user, { displayName: nombre });
@@ -51,7 +59,7 @@ btnRegister.addEventListener("click", async () => {
     await setDoc(doc(db, "usuarios", uid), {
       nombre,
       email,
-      rol:      "contratante",
+      rol: "contratante",
       creadoEn: serverTimestamp()
     });
 
@@ -67,7 +75,7 @@ btnRegister.addEventListener("click", async () => {
       mostrarError("Error al crear la cuenta. Inténtalo de nuevo.");
       console.error(error);
     }
-    btnRegister.disabled    = false;
+    btnRegister.disabled = false;
     btnRegister.textContent = "Crear cuenta";
   }
 });
