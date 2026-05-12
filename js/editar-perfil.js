@@ -1,5 +1,5 @@
-// js/editar-perfil.js
-// Carga y guarda el perfil del DJ
+// editar-perfil.js
+// Carga los datos del DJ y permite editarlos y guardarlos en Firestore
 
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
@@ -9,11 +9,13 @@ import { doc, getDoc, setDoc, serverTimestamp }
 
 const GENEROS = ["techno", "house", "reggaeton", "pop", "electronica"];
 
+// elementos del formulario
 const bioInput          = document.getElementById("bio");
 const ciudadInput       = document.getElementById("ciudad");
 const tarifaInput       = document.getElementById("tarifa");
 const fotoPerfilInput   = document.getElementById("fotoPerfil");
 const audioPreviewInput = document.getElementById("audioPreview");
+const instagramInput    = document.getElementById("instagram");
 const disponibleCheck   = document.getElementById("disponible");
 const generosContenedor = document.getElementById("generos-container");
 const btnGuardar        = document.getElementById("btn-guardar");
@@ -24,7 +26,7 @@ const imgPerfilPreview  = document.getElementById("img-perfil-preview");
 
 let generosSeleccionados = [];
 
-// ── Previsualizar foto de perfil ───────────────────────────
+// cuando el usuario escribe una URL de foto la previsualizo en tiempo real
 if (fotoPerfilInput) {
   fotoPerfilInput.addEventListener("input", () => {
     const url = fotoPerfilInput.value.trim();
@@ -37,7 +39,7 @@ if (fotoPerfilInput) {
   });
 }
 
-// ── Crear botones de género ────────────────────────────────
+// creo los botones de seleccion de generos musicales
 function crearBotonesGeneros() {
   generosContenedor.innerHTML = GENEROS.map(g => `
     <button type="button" class="btn-genero" data-genero="${g}"
@@ -52,11 +54,13 @@ function crearBotonesGeneros() {
     btn.addEventListener("click", () => {
       const g = btn.dataset.genero;
       if (generosSeleccionados.includes(g)) {
+        // lo quito de la seleccion
         generosSeleccionados = generosSeleccionados.filter(x => x !== g);
         btn.style.background  = "white";
         btn.style.color       = "#374151";
         btn.style.borderColor = "#d1d5db";
       } else {
+        // lo añado a la seleccion
         generosSeleccionados.push(g);
         btn.style.background  = "#7B2FBE";
         btn.style.color       = "white";
@@ -66,7 +70,7 @@ function crearBotonesGeneros() {
   });
 }
 
-// ── Marcar géneros ya guardados ────────────────────────────
+// marco en morado los generos que el DJ ya tenia guardados
 function marcarGenerosActivos() {
   document.querySelectorAll(".btn-genero").forEach(btn => {
     if (generosSeleccionados.includes(btn.dataset.genero)) {
@@ -77,19 +81,21 @@ function marcarGenerosActivos() {
   });
 }
 
-// ── Cargar datos y esperar sesión ──────────────────────────
+// espero a que haya sesion iniciada y cargo los datos del DJ
 onAuthStateChanged(auth, async (usuario) => {
   if (!usuario) {
     window.location.href = "login.html";
     return;
   }
 
+  // solo pueden acceder los usuarios con rol dj
   const usuarioSnap = await getDoc(doc(db, "usuarios", usuario.uid));
   if (!usuarioSnap.exists() || usuarioSnap.data().rol !== "dj") {
     window.location.href = "dashboard.html";
     return;
   }
 
+  // cargo los datos actuales del DJ desde Firestore
   const djSnap = await getDoc(doc(db, "djs", usuario.uid));
   if (djSnap.exists()) {
     const dj = djSnap.data();
@@ -100,25 +106,30 @@ onAuthStateChanged(auth, async (usuario) => {
     disponibleCheck.checked = dj.disponible ?? true;
     generosSeleccionados    = dj.generos    || [];
 
-    // Foto de perfil
+    // foto de perfil
     if (dj.fotoPerfil && fotoPerfilInput) {
       fotoPerfilInput.value       = dj.fotoPerfil;
       imgPerfilPreview.src        = dj.fotoPerfil;
       previewPerfil.style.display = "block";
     }
 
-    // Audio preview
+    // audio preview de SoundCloud
     if (dj.audioPreview && audioPreviewInput) {
       audioPreviewInput.value = dj.audioPreview;
     }
 
-    // Sitios
+    // instagram
+    if (dj.instagram && instagramInput) {
+      instagramInput.value = dj.instagram;
+    }
+
+    // sitios donde ha pinchado
     const sitios = dj.sitios || [];
     document.querySelectorAll(".input-sitio").forEach((input, i) => {
       input.value = sitios[i] || "";
     });
 
-    // Galería
+    // fotos de la galeria
     const galeria = dj.galeria || [];
     document.querySelectorAll(".input-galeria").forEach((input, i) => {
       input.value = galeria[i] || "";
@@ -128,13 +139,14 @@ onAuthStateChanged(auth, async (usuario) => {
   crearBotonesGeneros();
   marcarGenerosActivos();
 
-  // ── Guardar cambios ──────────────────────────────────────
+  // cuando el DJ pulsa guardar actualizo su documento en Firestore
   btnGuardar.addEventListener("click", async () => {
     alerta.className = "alerta error";
     exito.className  = "alerta exito";
     btnGuardar.disabled    = true;
     btnGuardar.textContent = "Guardando...";
 
+    // recojo los sitios y la galeria de los inputs
     const sitios = Array.from(document.querySelectorAll(".input-sitio"))
       .map(input => input.value.trim())
       .filter(v => v !== "");
@@ -145,24 +157,25 @@ onAuthStateChanged(auth, async (usuario) => {
 
     try {
       await setDoc(doc(db, "djs", usuario.uid), {
-        bio:           bioInput.value.trim(),
-        ciudad:        ciudadInput.value.trim(),
-        tarifa:        parseFloat(tarifaInput.value) || 0,
-        generos:       generosSeleccionados,
-        disponible:    disponibleCheck.checked,
-        fotoPerfil:    fotoPerfilInput?.value.trim()   || "",
-        audioPreview:  audioPreviewInput?.value.trim() || "",
+        bio:          bioInput.value.trim(),
+        ciudad:       ciudadInput.value.trim(),
+        tarifa:       parseFloat(tarifaInput.value) || 0,
+        generos:      generosSeleccionados,
+        disponible:   disponibleCheck.checked,
+        fotoPerfil:   fotoPerfilInput?.value.trim()   || "",
+        audioPreview: audioPreviewInput?.value.trim() || "",
+        instagram:    instagramInput?.value.trim()    || "",
         sitios,
         galeria,
         actualizadoEn: serverTimestamp()
       }, { merge: true });
 
-      exito.textContent = "✅ Perfil actualizado correctamente";
+      exito.textContent = "Perfil actualizado correctamente";
       exito.className   = "alerta exito visible";
       setTimeout(() => { exito.className = "alerta exito"; }, 3000);
 
     } catch (error) {
-      alerta.textContent = "Error al guardar. Inténtalo de nuevo.";
+      alerta.textContent = "Error al guardar. Intentalo de nuevo.";
       alerta.className   = "alerta error visible";
       console.error(error);
     }

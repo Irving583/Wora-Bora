@@ -1,5 +1,5 @@
-// js/dashboard.js
-// Panel de control — diferente según si eres DJ, contratante o admin
+// dashboard.js
+// Panel de control, muestra una vista diferente segun el rol del usuario
 
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
@@ -20,6 +20,7 @@ if (btnLogout) {
   });
 }
 
+// cuando se carga la pagina compruebo que rol tiene el usuario y cargo su panel
 onAuthStateChanged(auth, async (usuario) => {
   if (!usuario) {
     window.location.href = "login.html";
@@ -32,6 +33,7 @@ onAuthStateChanged(auth, async (usuario) => {
   const datos = snap.data();
   datosUsuarioActual = datos;
 
+  // segun el rol cargo un panel diferente
   if (datos.rol === "admin") {
     await dashboardAdmin(datos);
   } else if (datos.rol === "dj") {
@@ -41,17 +43,18 @@ onAuthStateChanged(auth, async (usuario) => {
   }
 });
 
-// ══════════════════════════════════════════════════════════
-// DASHBOARD ADMIN
-// ══════════════════════════════════════════════════════════
+// panel del administrador — ve y gestiona todas las reservas
 async function dashboardAdmin(datos) {
+  // cargo todos los DJs para el filtro
   const djsSnap = await getDocs(collection(db, "djs"));
   const djs     = djsSnap.docs.map(d => ({ id: d.id, ...d.data() }));
 
+  // cargo todas las reservas ordenadas por fecha
   const reservasSnap = await getDocs(
     query(collection(db, "reservas"), orderBy("creadoEn", "desc"))
   );
 
+  // para cada reserva busco el nombre del DJ y del contratante
   const todasReservas = await Promise.all(
     reservasSnap.docs.map(async (d) => {
       const r = { id: d.id, ...d.data() };
@@ -128,7 +131,6 @@ async function dashboardAdmin(datos) {
       <div id="lista-admin" class="reservas-grid">
         ${todasReservas.length === 0
           ? `<div class="vacio">
-               <div class="vacio-emoji"></div>
                <p>No hay reservas en la plataforma</p>
              </div>`
           : todasReservas.map(r => tarjetaAdmin(r)).join("")
@@ -140,6 +142,7 @@ async function dashboardAdmin(datos) {
   const filtroDJ     = document.getElementById("filtro-dj-admin");
   const filtroEstado = document.getElementById("filtro-estado-admin");
 
+  // filtro las reservas segun lo que seleccione el admin
   function aplicarFiltros() {
     const djSelec     = filtroDJ.value;
     const estadoSelec = filtroEstado.value;
@@ -161,6 +164,7 @@ async function dashboardAdmin(datos) {
   conectarBotonesAdmin(datos);
 }
 
+// genera la tarjeta de cada reserva en el panel admin
 function tarjetaAdmin(r) {
   const acciones = r.estado === "pendiente" ? `
     <div class="reserva-acciones">
@@ -191,6 +195,7 @@ function tarjetaAdmin(r) {
     </div>`;
 }
 
+// conecta los botones de aceptar y rechazar del panel admin
 function conectarBotonesAdmin(datos) {
   document.querySelectorAll(".btn-aceptar-admin").forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -217,9 +222,7 @@ function conectarBotonesAdmin(datos) {
   });
 }
 
-// ══════════════════════════════════════════════════════════
-// DASHBOARD CONTRATANTE
-// ══════════════════════════════════════════════════════════
+// panel del contratante — ve sus propias reservas
 async function dashboardContratante(uid, datos) {
   const q = query(
     collection(db, "reservas"),
@@ -228,6 +231,7 @@ async function dashboardContratante(uid, datos) {
   );
   const snap = await getDocs(q);
 
+  // para cada reserva busco el nombre del DJ
   const reservas = await Promise.all(
     snap.docs.map(async (d) => {
       const reserva = { id: d.id, ...d.data() };
@@ -283,6 +287,7 @@ async function dashboardContratante(uid, datos) {
       </div>
     </div>`;
 
+  // boton para simular el pago de una reserva aceptada
   document.querySelectorAll(".btn-pago").forEach(btn => {
     btn.addEventListener("click", async () => {
       btn.disabled    = true;
@@ -298,6 +303,7 @@ async function dashboardContratante(uid, datos) {
   conectarBotonesValorar();
 }
 
+// genera la tarjeta de cada reserva del contratante
 function tarjetaContratante(r) {
   const btnPago = r.estado === "aceptada" && !r.pagado
     ? `<button class="btn btn-primary btn-pago" data-id="${r.id}"
@@ -339,9 +345,7 @@ function tarjetaContratante(r) {
     </div>`;
 }
 
-// ══════════════════════════════════════════════════════════
-// DASHBOARD DJ
-// ══════════════════════════════════════════════════════════
+// panel del DJ — ve las solicitudes que le han llegado
 async function dashboardDJ(uid, datos) {
   const q = query(
     collection(db, "reservas"),
@@ -403,6 +407,7 @@ async function dashboardDJ(uid, datos) {
   });
 }
 
+// genera la tarjeta de cada solicitud en el panel del DJ
 function tarjetaDJ(r) {
   const acciones = r.estado === "pendiente" ? `
     <div class="reserva-acciones">
@@ -423,6 +428,7 @@ function tarjetaDJ(r) {
     </div>`;
 }
 
+// cambia el estado de una reserva y recarga el panel
 async function cambiarEstado(btn, nuevoEstado, uid, datos) {
   btn.disabled = true;
   await updateDoc(doc(db, "reservas", btn.dataset.id), {
@@ -432,9 +438,7 @@ async function cambiarEstado(btn, nuevoEstado, uid, datos) {
   await dashboardDJ(uid, datos);
 }
 
-// ══════════════════════════════════════════════════════════
-// SISTEMA DE VALORACIONES
-// ══════════════════════════════════════════════════════════
+// conecta los botones de valorar del panel contratante
 function conectarBotonesValorar() {
   document.querySelectorAll(".btn-valorar").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -443,6 +447,7 @@ function conectarBotonesValorar() {
   });
 }
 
+// muestra el modal para que el contratante valore al DJ
 function mostrarModalValoracion(idReserva, idDJ) {
   const modal = document.createElement("div");
   modal.id = "modal-valoracion";
@@ -497,6 +502,7 @@ function mostrarModalValoracion(idReserva, idDJ) {
   let puntuacion = 0;
   const estrellas = modal.querySelectorAll(".estrella");
 
+  // interaccion con las estrellas al pasar el raton
   estrellas.forEach(estrella => {
     estrella.addEventListener("mouseover", () => {
       const val = parseInt(estrella.dataset.valor);
@@ -521,6 +527,7 @@ function mostrarModalValoracion(idReserva, idDJ) {
     document.body.removeChild(modal);
   });
 
+  // al enviar guardo la valoracion y actualizo la media del DJ
   modal.querySelector("#btn-enviar-valoracion").addEventListener("click", async () => {
     const comentario = modal.querySelector("#comentario-valoracion").value.trim();
     const alertaVal  = modal.querySelector("#alerta-valoracion");
@@ -561,6 +568,7 @@ function mostrarModalValoracion(idReserva, idDJ) {
   });
 }
 
+// calcula la media de valoraciones del DJ y la actualiza en Firestore
 async function actualizarMediaDJ(idDJ) {
   const q    = query(collection(db, "valoraciones"), where("idDJ", "==", idDJ));
   const snap = await getDocs(q);

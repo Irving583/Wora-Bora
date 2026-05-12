@@ -1,5 +1,5 @@
-// js/navbar.js
-// Controla el navbar en todas las páginas según si hay sesión o no
+// navbar.js
+// Controla los enlaces del navbar segun si el usuario tiene sesion iniciada o no
 
 import { auth } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
@@ -10,15 +10,16 @@ const navRegister  = document.getElementById("nav-register");
 const navDashboard = document.getElementById("nav-dashboard");
 const navLogout    = document.getElementById("nav-logout");
 
+// escucho los cambios de sesion y actualizo el navbar
 onAuthStateChanged(auth, (usuario) => {
   if (usuario) {
-    // Logueado → mostrar dashboard y salir
+    // si hay sesion muestro el panel y el boton de salir
     if (navLogin)     navLogin.style.display     = "none";
     if (navRegister)  navRegister.style.display  = "none";
     if (navDashboard) navDashboard.style.display = "inline-block";
     if (navLogout)    navLogout.style.display     = "inline-block";
   } else {
-    // Sin sesión → mostrar login y register
+    // si no hay sesion muestro login y registro
     if (navLogin)     navLogin.style.display     = "inline-block";
     if (navRegister)  navRegister.style.display  = "inline-block";
     if (navDashboard) navDashboard.style.display = "none";
@@ -26,6 +27,7 @@ onAuthStateChanged(auth, (usuario) => {
   }
 });
 
+// boton de cerrar sesion
 if (navLogout) {
   navLogout.addEventListener("click", async () => {
     await signOut(auth);

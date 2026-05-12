@@ -10,7 +10,6 @@
 </head>
 
 <body>
-    <!--NAVBARRA-->
     <nav class="navbarr">
         <a href="../index.html" class="navbar-logo">
             <img src="../img/Logo.png" alt="Wora Bora" style="height:40px; width:auto; vertical-align:middle" />
@@ -42,7 +41,7 @@
                     placeholder="https://i.imgur.com/tu-foto.jpg" />
                 <p style="font-size:0.78rem; color:#6b7280; margin-top:0.25rem">
                     Sube tu foto a <a href="https://imgur.com" target="_blank"
-                    style="color:#7B2FBE">imgur.com</a> gratis y pega la URL aquí
+                    style="color:#7B2FBE">imgur.com</a> gratis y pega la URL aqui
                 </p>
             </div>
 
@@ -59,15 +58,25 @@
                 <input type="url" id="audioPreview"
                     placeholder="https://soundcloud.com/usuario/cancion" />
                 <p style="font-size:0.78rem; color:#6b7280; margin-top:0.25rem">
-                    Pega el enlace de una canción de SoundCloud
+                    Pega el enlace de una cancion de SoundCloud
+                </p>
+            </div>
+
+            <!-- Instagram -->
+            <div class="form-group">
+                <label for="instagram">Instagram (URL)</label>
+                <input type="url" id="instagram"
+                    placeholder="https://www.instagram.com/tu_usuario" />
+                <p style="font-size:0.78rem; color:#6b7280; margin-top:0.25rem">
+                    Pega el enlace de tu perfil de Instagram
                 </p>
             </div>
 
             <!-- Biografía -->
             <div class="form-group">
-                <label for="bio">Biografía</label>
+                <label for="bio">Biografia</label>
                 <textarea id="bio" rows="4"
-                    placeholder="Cuéntanos quién eres, tu experiencia..."></textarea>
+                    placeholder="Cuentanos quien eres, tu experiencia..."></textarea>
             </div>
 
             <!-- Ciudad -->
@@ -78,13 +87,13 @@
 
             <!-- Tarifa -->
             <div class="form-group">
-                <label for="tarifa">Tarifa por evento (€)</label>
+                <label for="tarifa">Tarifa por evento (EUR)</label>
                 <input type="number" id="tarifa" min="0" placeholder="Ej: 300" />
             </div>
 
             <!-- Géneros -->
             <div class="form-group">
-                <label>Géneros musicales</label>
+                <label>Generos musicales</label>
                 <div id="generos-container"
                     style="display:flex; flex-wrap:wrap; gap:0.5rem; margin-top:0.35rem">
                 </div>
@@ -99,15 +108,15 @@
                 <div style="display:flex; flex-direction:column; gap:0.5rem">
                     <input type="text" class="input-sitio" placeholder="Ej: Club Fabrik, Madrid" />
                     <input type="text" class="input-sitio" placeholder="Ej: Festival Dreambeach" />
-                    <input type="text" class="input-sitio" placeholder="Ej: Sala Changó, Barcelona" />
-                    <input type="text" class="input-sitio" placeholder="Ej: Café del Mar, Ibiza" />
-                    <input type="text" class="input-sitio" placeholder="Ej: Arena Club, Berlín" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Sala Chango, Barcelona" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Cafe del Mar, Ibiza" />
+                    <input type="text" class="input-sitio" placeholder="Ej: Arena Club, Berlin" />
                 </div>
             </div>
 
             <!-- Galería de fotos -->
             <div class="form-group">
-                <label>Galería de fotos (URLs)</label>
+                <label>Galeria de fotos (URLs)</label>
                 <p style="font-size:0.78rem; color:#6b7280; margin-bottom:0.5rem">
                     Añade hasta 4 fotos subidas a imgur.com
                 </p>
@@ -141,7 +150,7 @@
     </div>
 
     <footer class="footer">
-        <p>© 2026 Wora Bora Agency · Proyecto académico 2º DAW</p>
+        <p>2026 Wora Bora Agency · Proyecto academico 2 DAW</p>
     </footer>
 
     <script type="module" src="../js/editar-perfil.js"></script>

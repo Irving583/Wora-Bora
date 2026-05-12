@@ -1,5 +1,5 @@
-// js/marketplace.js
-// Carga los DJs desde Firestore y aplica los filtros
+// marketplace.js
+// Carga los DJs desde Firestore y gestiona los filtros de busqueda
 
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
@@ -19,6 +19,7 @@ const navRegister  = document.getElementById("nav-register");
 const navDashboard = document.getElementById("nav-dashboard");
 const navLogout    = document.getElementById("nav-logout");
 
+// actualizo el navbar segun si hay sesion o no
 onAuthStateChanged(auth, (usuario) => {
   if (usuario) {
     if (navLogin)     navLogin.style.display     = "none";
@@ -35,9 +36,10 @@ if (navLogout) {
   });
 }
 
+// guardo todos los DJs en memoria para filtrar sin hacer nuevas peticiones a Firebase
 let todosDJs = [];
 
-// ── Cargar DJs desde Firestore ─────────────────────────────
+// cargo los DJs desde Firestore al entrar en la pagina
 async function cargarDJs() {
   listaDjs.innerHTML = '<div class="spinner"></div>';
   try {
@@ -45,7 +47,7 @@ async function cargarDJs() {
     const snapshot = await getDocs(q);
     todosDJs       = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
-    // Leer genero de la URL si viene desde la pagina de inicio
+    // si viene un genero en la URL lo aplico como filtro automaticamente
     const params    = new URLSearchParams(window.location.search);
     const generoURL = params.get("genero");
     if (generoURL && filtroGenero) {
@@ -64,12 +66,13 @@ async function cargarDJs() {
   }
 }
 
-// ── Crear tarjeta estilo Real Madrid ───────────────────────
+// genera la tarjeta visual de cada DJ
 function crearTarjeta(dj) {
   const nombre  = dj.nombre || "DJ Anonimo";
   const inicial = nombre[0].toUpperCase();
   const tarifa  = dj.tarifa > 0 ? `${dj.tarifa} EUR` : "A consultar";
 
+  // colores de fondo para cuando no hay foto
   const colores = [
     { bg: "#4A148C", color: "#EDE7F6" },
     { bg: "#880E4F", color: "#FCE4EC" },
@@ -80,6 +83,7 @@ function crearTarjeta(dj) {
   ];
   const color = colores[nombre.charCodeAt(0) % colores.length];
 
+  // estrellas de valoracion si tiene alguna
   let estrellas = "";
   if (dj.valoracion > 0) {
     const llenas = Math.round(dj.valoracion);
@@ -88,6 +92,7 @@ function crearTarjeta(dj) {
     </span>`;
   }
 
+  // tags de generos musicales
   const tags = dj.generos?.length > 0
     ? dj.generos.map(g => `
         <span style="background:rgba(255,255,255,0.2); color:white;
@@ -97,6 +102,7 @@ function crearTarjeta(dj) {
         </span>`).join("")
     : "";
 
+  // si tiene foto la pongo de fondo, si no uso un degradado con el color del DJ
   const fondoHTML = dj.fotoPerfil
     ? `background: url('${dj.fotoPerfil}') center/cover no-repeat`
     : `background: linear-gradient(135deg, ${color.bg}, #7B2FBE)`;
@@ -168,7 +174,7 @@ function crearTarjeta(dj) {
     </a>`;
 }
 
-// ── Mostrar lista de DJs ───────────────────────────────────
+// muestra los DJs en el grid y actualiza el contador de resultados
 function mostrarDJs(djs) {
   resultadosInfo.textContent =
     `${djs.length} DJ${djs.length !== 1 ? "s" : ""} encontrado${djs.length !== 1 ? "s" : ""}`;
@@ -184,7 +190,7 @@ function mostrarDJs(djs) {
   listaDjs.innerHTML = djs.map(dj => crearTarjeta(dj)).join("");
 }
 
-// ── Filtros ────────────────────────────────────────────────
+// filtra los DJs segun los valores de los inputs sin hacer nuevas peticiones
 function aplicarFiltros() {
   const nombre = filtroNombre.value.trim().toLowerCase();
   const genero = filtroGenero.value;
@@ -202,6 +208,7 @@ function aplicarFiltros() {
   mostrarDJs(resultado);
 }
 
+// escucho los cambios en los filtros para actualizar la lista
 filtroNombre.addEventListener("input",  aplicarFiltros);
 filtroGenero.addEventListener("change", aplicarFiltros);
 filtroCiudad.addEventListener("input",  aplicarFiltros);

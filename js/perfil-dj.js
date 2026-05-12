@@ -1,5 +1,5 @@
-// js/perfil-dj.js
-// Perfil público del DJ 
+// perfil-dj.js
+// Este archivo carga el perfil publico de un DJ y gestiona el formulario de reserva
 
 import { auth, db } from "./firebase-config.js";
 import { onAuthStateChanged, signOut }
@@ -11,6 +11,7 @@ import {
 
 const contenido = document.getElementById("contenido");
 
+// elementos del navbar
 const navLogin     = document.getElementById("nav-login");
 const navRegister  = document.getElementById("nav-register");
 const navDashboard = document.getElementById("nav-dashboard");
@@ -19,6 +20,7 @@ const navLogout    = document.getElementById("nav-logout");
 let usuarioActual = null;
 let datosUsuario  = null;
 
+// compruebo si hay sesion iniciada y actualizo el navbar
 onAuthStateChanged(auth, async (user) => {
   usuarioActual = user;
   if (user) {
@@ -31,6 +33,7 @@ onAuthStateChanged(auth, async (user) => {
   }
 });
 
+// boton de cerrar sesion
 if (navLogout) {
   navLogout.addEventListener("click", async () => {
     await signOut(auth);
@@ -38,9 +41,11 @@ if (navLogout) {
   });
 }
 
+// obtengo el id del DJ desde la URL
 const params = new URLSearchParams(window.location.search);
 const idDJ   = params.get("id");
 
+// funcion principal que carga los datos del DJ desde Firestore
 async function cargarPerfil() {
   if (!idDJ) {
     contenido.innerHTML = '<p style="text-align:center;padding:4rem">DJ no encontrado.</p>';
@@ -54,7 +59,7 @@ async function cargarPerfil() {
     }
     const dj = { id: djSnap.id, ...djSnap.data() };
 
-    // Cargar valoraciones del DJ
+    // cargo tambien las valoraciones del DJ ordenadas por fecha
     const vSnap = await getDocs(query(
       collection(db, "valoraciones"),
       where("idDJ", "==", idDJ),
@@ -71,6 +76,7 @@ async function cargarPerfil() {
   }
 }
 
+// genera el HTML del perfil completo del DJ
 function renderPerfil(dj, valoraciones = []) {
   const nombre  = dj.nombre || "DJ Anonimo";
   const inicial = nombre[0].toUpperCase();
@@ -78,6 +84,7 @@ function renderPerfil(dj, valoraciones = []) {
   const ciudad  = dj.ciudad || "Ciudad no indicada";
   const bio     = dj.bio    || "Este DJ aun no ha añadido una descripcion.";
 
+  // colores para el avatar cuando no hay foto
   const colores = [
     { bg: "#EDE7F6", color: "#4A148C" },
     { bg: "#FCE4EC", color: "#880E4F" },
@@ -88,6 +95,7 @@ function renderPerfil(dj, valoraciones = []) {
   ];
   const color = colores[nombre.charCodeAt(0) % colores.length];
 
+  // estrellas de valoracion
   let estrellasHTML = "";
   if (dj.valoracion > 0) {
     const llenas = Math.round(dj.valoracion);
@@ -102,6 +110,7 @@ function renderPerfil(dj, valoraciones = []) {
       </div>`;
   }
 
+  // tags de generos musicales
   const tags = dj.generos?.length > 0
     ? dj.generos.map(g => `
         <span style="background:rgba(255,255,255,0.15); color:white;
@@ -112,6 +121,7 @@ function renderPerfil(dj, valoraciones = []) {
         </span>`).join("")
     : "";
 
+  // lista de sitios donde ha pinchado
   const sitiosHTML = dj.sitios?.length > 0
     ? dj.sitios.map((s, i) => `
         <div style="display:flex; align-items:center; justify-content:space-between;
@@ -128,6 +138,7 @@ function renderPerfil(dj, valoraciones = []) {
         </div>`).join("")
     : '<p style="color:#6b7280; padding:1rem 0">Aun no hay sitios añadidos</p>';
 
+  // galeria de fotos con efecto hover
   const galeriaHTML = dj.galeria?.length > 0
     ? `<div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr));
                    gap:1rem">
@@ -151,6 +162,7 @@ function renderPerfil(dj, valoraciones = []) {
        </div>`
     : '<p style="color:#6b7280">Aun no hay fotos en la galeria</p>';
 
+  // valoraciones y comentarios de los contratantes
   const valoracionesHTML = valoraciones.length === 0
     ? '<p style="color:#6b7280">Aun no hay valoraciones</p>'
     : valoraciones.map(v => `
@@ -168,6 +180,7 @@ function renderPerfil(dj, valoraciones = []) {
             : ""}
         </div>`).join("");
 
+  // foto de perfil o avatar con inicial si no hay foto
   const fotoHTML = dj.fotoPerfil
     ? `<img src="${dj.fotoPerfil}" alt="${nombre}"
         style="height:340px; object-fit:cover; object-position:top;
@@ -268,8 +281,6 @@ function renderPerfil(dj, valoraciones = []) {
         </div>` : ""}
       </div>
     </div>
-      </div>
-    </div>
 
     <div style="max-width:1400px; margin:0 auto; padding:3rem 4rem;
                 display:grid; grid-template-columns:1fr 400px; gap:3rem">
@@ -363,7 +374,7 @@ function renderPerfil(dj, valoraciones = []) {
     </div>`;
 }
 
-// ── Conectar galeria con lightbox ──────────────────────────
+// abre el lightbox al hacer clic en una foto de la galeria
 function conectarGaleria(dj) {
   if (!dj.galeria?.length) return;
   document.querySelectorAll(".foto-galeria").forEach((div) => {
@@ -374,7 +385,7 @@ function conectarGaleria(dj) {
   });
 }
 
-// ── Lightbox con navegacion ────────────────────────────────
+// lightbox para ver las fotos a pantalla completa con navegacion
 function abrirLightbox(fotos, indexInicial) {
   let index = indexInicial;
 
@@ -436,6 +447,7 @@ function abrirLightbox(fotos, indexInicial) {
   document.body.appendChild(lightbox);
 }
 
+// gestiona el envio del formulario de reserva
 function conectarFormulario(dj) {
   const form        = document.getElementById("form-reserva");
   const btnReserva  = document.getElementById("btn-reserva");
